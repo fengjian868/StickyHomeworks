@@ -13,6 +13,7 @@ public class SettingsViewModel : ObservableRecipient
     private string _tagEditText = "";
     private int _tagSelectedIndex = -1;
     private string _debugRichTextBoxContent = "";
+    private int _keyboardButtonSelectedIndex = -1;
 
     public int AppIconClickCount
     {
@@ -109,6 +110,17 @@ public class SettingsViewModel : ObservableRecipient
         {
             if (value == _debugRichTextBoxContent) return;
             _debugRichTextBoxContent = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public int KeyboardButtonSelectedIndex
+    {
+        get => _keyboardButtonSelectedIndex;
+        set
+        {
+            if (value == _keyboardButtonSelectedIndex) return;
+            _keyboardButtonSelectedIndex = value;
             OnPropertyChanged();
         }
     }

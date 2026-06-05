@@ -36,6 +36,8 @@ public class Settings : ObservableRecipient
     private double _maxPanelWidth = 350;
     private bool _isDebugShowInTaskBar = false;
     private ObservableCollection<Color> _savedColors = new();
+    private ObservableCollection<string> _customKeyboardButtons = new();
+    private bool _isCustomKeyboardEnabled = true;
 
     public double WindowX
     {
@@ -358,6 +360,28 @@ public class Settings : ObservableRecipient
         {
             if (Equals(value, _savedColors)) return;
             _savedColors = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public ObservableCollection<string> CustomKeyboardButtons
+    {
+        get => _customKeyboardButtons;
+        set
+        {
+            if (Equals(value, _customKeyboardButtons)) return;
+            _customKeyboardButtons = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool IsCustomKeyboardEnabled
+    {
+        get => _isCustomKeyboardEnabled;
+        set
+        {
+            if (value == _isCustomKeyboardEnabled) return;
+            _isCustomKeyboardEnabled = value;
             OnPropertyChanged();
         }
     }

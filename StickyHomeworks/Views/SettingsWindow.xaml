@@ -571,6 +571,50 @@
                         </Grid>
                     </TabItem>
 
+                    <!-- 键盘 -->
+                    <TabItem Header="键盘">
+                        <Grid Margin="12" MaxWidth="750">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <ely:SettingsCard Grid.Row="0" IconGlyph="KeyboardOutline" Header="启用自定义键盘"
+                                              Description="在编辑作业时显示自定义快捷键盘，代替系统键盘。"
+                                              IsOn="{Binding Settings.IsCustomKeyboardEnabled, Mode=TwoWay}" />
+                            <DockPanel Grid.Row="1" Margin="0 8 0 8">
+                                <Button DockPanel.Dock="Right" Click="ButtonAddKeyboardButton_OnClick"
+                                        Style="{StaticResource MaterialDesignFlatButton}">
+                                    <ely:IconText Kind="Add" Text="添加按钮" />
+                                </Button>
+                                <TextBlock Text="自定义按钮" VerticalAlignment="Center" />
+                            </DockPanel>
+                            <ListBox Grid.Row="2" ItemsSource="{Binding Settings.CustomKeyboardButtons}"
+                                     SelectionMode="Single"
+                                     HorizontalContentAlignment="Stretch"
+                                     SelectedIndex="{Binding ViewModel.KeyboardButtonSelectedIndex}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="{Binding}" VerticalAlignment="Center" />
+                                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="4 0 0 0"
+                                                        Visibility="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType=ListBoxItem}, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                <Button Content="{materialDesign:PackIcon DeleteOutline, Size=16}"
+                                                        Style="{StaticResource MaterialDesignToolForegroundButton}"
+                                                        Margin="0 -8" ToolTip="删除" Foreground="IndianRed"
+                                                        Click="ButtonDeleteKeyboardButton_OnClick" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </Grid>
+                    </TabItem>
+
                     <!-- 关于 -->
                     <TabItem Header="关于">
                         <ScrollViewer>

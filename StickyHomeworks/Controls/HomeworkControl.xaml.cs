@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using ElysiaFramework;
 using Stfu.Linq;
 using StickyHomeworks.Models;
+using StickyHomeworks.Services;
 using StickyHomeworks.Views;
 
 namespace StickyHomeworks.Controls;
@@ -100,7 +101,27 @@ public partial class HomeworkControl : UserControl
     {
         if (e.Key == Key.Enter)
         {
-            App.GetService<MainWindow>().OnTextBoxEnter();
+            AppEx.GetService<MainWindow>().OnTextBoxEnter();
+        }
+    }
+
+    private void RichTextBox_OnPreviewMouseDown(object sender, MouseButtonEventArgs e)
+    {
+        // 阻止默认行为，防止系统键盘弹出
+        if (AppEx.GetService<SettingsService>().Settings.IsCustomKeyboardEnabled)
+        {
+            e.Handled = true;
+            EnterEdit();
+        }
+    }
+
+    private void RichTextBox_OnTouchDown(object sender, TouchEventArgs e)
+    {
+        // 阻止触摸时系统键盘弹出
+        if (AppEx.GetService<SettingsService>().Settings.IsCustomKeyboardEnabled)
+        {
+            e.Handled = true;
+            EnterEdit();
         }
     }
 }

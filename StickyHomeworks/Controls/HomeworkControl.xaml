@@ -58,13 +58,15 @@
                 <emoji:RichTextBox VerticalAlignment="Top"
                                    Padding="0"
                                   x:Name="RichTextBox"
-                                  FontSize="20" 
+                                  FontSize="20"
                                   FontWeight="Regular"
                                   Style="{StaticResource MaterialDesignRichTextBox}"
                                   HorizontalAlignment="Stretch"
                                   BorderThickness="0"
                                    AcceptsReturn="False"
                                    KeyDown="RichTextBox_OnKeyDown"
+                                   PreviewMouseDown="RichTextBox_OnPreviewMouseDown"
+                                   TouchDown="RichTextBox_OnTouchDown"
                                   IsReadOnly="{Binding IsSelected, Converter={StaticResource InvertBooleanConverter}}"
                                   materialDesign:TextFieldAssist.UnderlineBrush="{x:Null}">
                     <emoji:RichTextBox.IsHitTestVisible>

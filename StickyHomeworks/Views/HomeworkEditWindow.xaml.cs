@@ -16,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using ElysiaFramework;
+using StickyHomeworks.Models;
 using StickyHomeworks.Services;
 using StickyHomeworks.ViewModels;
 
@@ -45,6 +46,32 @@ public partial class HomeworkEditWindow : Window, INotifyPropertyChanged
         Show();
         Activate();
         IsOpened = true;
+        UpdateKeyboardVisibility();
+    }
+
+    private void UpdateKeyboardVisibility()
+    {
+        if (SettingsService.Settings.IsCustomKeyboardEnabled)
+        {
+            CustomKeyboard.Visibility = Visibility.Visible;
+            CustomKeyboard.TargetRichTextBox = RelatedRichTextBox;
+            // 转换自定义按钮字符串为 KeyboardButton 对象
+            var buttons = new ObservableCollection<Models.KeyboardButton>();
+            foreach (var btn in SettingsService.Settings.CustomKeyboardButtons)
+            {
+                buttons.Add(new Models.KeyboardButton(btn, "custom"));
+            }
+            CustomKeyboard.CustomButtons = buttons;
+        }
+        else
+        {
+            CustomKeyboard.Visibility = Visibility.Collapsed;
+        }
+    }
+
+    private void CustomKeyboard_OnCloseRequested(object? sender, EventArgs e)
+    {
+        CustomKeyboard.Visibility = Visibility.Collapsed;
     }
 
     public void TryClose()

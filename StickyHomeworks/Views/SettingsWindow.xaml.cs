@@ -287,4 +287,19 @@ public partial class SettingsWindow : MyWindow
     {
         AppEx.GetService<HomeworkEditWindow>().Show();
     }
+
+    private void ButtonAddKeyboardButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        Settings.CustomKeyboardButtons.Add("新按钮");
+        ViewModel.KeyboardButtonSelectedIndex = Settings.CustomKeyboardButtons.Count - 1;
+    }
+
+    private void ButtonDeleteKeyboardButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (ViewModel.KeyboardButtonSelectedIndex == -1)
+        {
+            return;
+        }
+        Settings.CustomKeyboardButtons.RemoveAt(ViewModel.KeyboardButtonSelectedIndex);
+    }
 }

@@ -25,7 +25,8 @@
         SizeToContent="Height"
         AllowsTransparency="True"
         Icon="/Assets/AppLogo.png"
-        Title="编辑作业" Height="450" Width="300">
+        Title="编辑作业" Height="450" Width="300"
+                   xmlns:controls="clr-namespace:StickyHomeworks.Controls">
     <Window.Resources>
         <ely:IntToStringConverter x:Key="IntToStringConverter" />
         <converter:ColorToBrushConverter x:Key="ColorToBrushConverter" />
@@ -40,6 +41,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
@@ -275,6 +277,12 @@
                     <ely:IconText Kind="Check" Text="确定"/>
                 </Button>
             </StackPanel>
+
+            <!-- 自定义键盘 -->
+            <controls:HomeworkKeyboard Grid.Row="4"
+                                       x:Name="CustomKeyboard"
+                                       Visibility="Collapsed"
+                                       CloseRequested="CustomKeyboard_OnCloseRequested"/>
         </Grid>
     </materialDesign:Card>
 </Window>
