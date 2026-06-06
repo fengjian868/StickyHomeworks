@@ -145,7 +145,7 @@ public partial class HomeworkKeyboard : UserControl
         else
         {
             var caret = TargetRichTextBox.CaretPosition;
-            var prev = caret.GetPositionAtOffset(-1, LogicalDirection.Backward);
+            var prev = caret.GetPositionAtOffset(-1, System.Windows.Documents.LogicalDirection.Backward);
             if (prev != null)
             {
                 selection.Select(prev, caret);
