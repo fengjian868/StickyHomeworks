@@ -53,7 +53,7 @@ public partial class HomeworkEditWindow : Window, INotifyPropertyChanged
 
     private void UpdateKeyboardVisibility()
     {
-        if (SettingsService.Settings.IsCustomKeyboardEnabled)
+        if (SettingsService.Settings.IsCustomKeyboardEnabled && RelatedRichTextBox != null)
         {
             _keyboardWindow ??= new KeyboardWindow();
             _keyboardWindow.Keyboard.TargetRichTextBox = RelatedRichTextBox;
