@@ -40,7 +40,6 @@ public partial class HomeworkEditWindow : Window, INotifyPropertyChanged
     public event EventHandler? SubjectChanged;
 
     private KeyboardWindow? _keyboardWindow;
-    private bool _keyboardManuallyClosed;
 
     public void TryOpen()
     {
@@ -54,11 +53,10 @@ public partial class HomeworkEditWindow : Window, INotifyPropertyChanged
 
     private void UpdateKeyboardVisibility()
     {
-        if (SettingsService.Settings.IsCustomKeyboardEnabled && !_keyboardManuallyClosed)
+        if (SettingsService.Settings.IsCustomKeyboardEnabled)
         {
             _keyboardWindow ??= new KeyboardWindow();
             _keyboardWindow.Keyboard.TargetRichTextBox = RelatedRichTextBox;
-            _keyboardWindow.Keyboard.CloseRequested += OnKeyboardCloseRequested;
             // 转换自定义按钮字符串为 KeyboardButton 对象
             var buttons = new ObservableCollection<Models.KeyboardButton>();
             foreach (var btn in SettingsService.Settings.CustomKeyboardButtons)
@@ -77,19 +75,12 @@ public partial class HomeworkEditWindow : Window, INotifyPropertyChanged
         }
     }
 
-    private void OnKeyboardCloseRequested(object? sender, EventArgs e)
-    {
-        _keyboardManuallyClosed = true;
-        _keyboardWindow?.Hide();
-    }
-
     public void TryClose()
     {
         if (!IsOpened)
             return;
         IsOpened = false;
         _keyboardWindow?.Hide();
-        _keyboardManuallyClosed = false;
         Hide();
     }
 

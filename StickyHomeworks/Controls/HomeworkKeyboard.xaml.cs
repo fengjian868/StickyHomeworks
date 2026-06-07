@@ -120,6 +120,7 @@ public partial class HomeworkKeyboard : UserControl
     {
         if (TargetRichTextBox == null) return;
 
+        TargetRichTextBox.Focus();
         var selection = TargetRichTextBox.Selection;
         if (selection.IsEmpty)
         {
@@ -129,8 +130,8 @@ public partial class HomeworkKeyboard : UserControl
         {
             selection.Text = text;
         }
-
-        TargetRichTextBox.Focus();
+        // 将光标移到插入文本之后
+        TargetRichTextBox.CaretPosition = selection.End;
     }
 
     private void ButtonBackspace_OnClick(object sender, RoutedEventArgs e)
