@@ -10,6 +10,18 @@
         ResizeMode="NoResize"
         Background="{x:Null}"
         SizeToContent="Height"
-        Title="键盘">
+        Title="键盘"
+        Opacity="0.9">
+    <Window.Resources>
+        <Storyboard x:Key="SlideUpStoryboard">
+            <DoubleAnimation Storyboard.TargetProperty="(Window.Top)"
+                             From="{Binding Source={x:Static SystemParameters.PrimaryScreenHeight}}"
+                             Duration="0:0:0.25">
+                <DoubleAnimation.EasingFunction>
+                    <QuadraticEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+    </Window.Resources>
     <controls:HomeworkKeyboard x:Name="KeyboardControl"/>
 </Window>
