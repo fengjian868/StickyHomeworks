@@ -1,51 +1,80 @@
-name: Build and Release
+name: Build StickyHomeworks
 
 on:
+  # 手动触发
+  workflow_dispatch:
+    inputs:
+      configuration:
+        description: '构建配置'
+        required: true
+        default: 'Release'
+        type: choice
+        options:
+          - Release
+          - Debug
+
+  # 推送到 master/main 时自动构建
   push:
     branches: [master, main]
+
+  # PR 时构建（不发布）
   pull_request:
     branches: [master, main]
-  workflow_dispatch:
 
 jobs:
   build:
     runs-on: windows-latest
+    name: 构建 Windows 应用
 
     steps:
-      - uses: actions/checkout@v4
+      - name: 检出代码
+        uses: actions/checkout@v4
 
-      - name: Setup .NET
+      - name: 安装 .NET 8 SDK
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: "8.0.x"
+          dotnet-version: '8.0.x'
 
-      - name: Restore dependencies
+      - name: 还原 NuGet 包
         run: dotnet restore
 
-      - name: Build
-        run: dotnet build --no-restore --configuration Release
+      - name: 编译项目
+        run: dotnet build --no-restore --configuration ${{ github.event.inputs.configuration || 'Release' }}
 
-      - name: Publish
+      - name: 发布为单文件 EXE
         run: |
           dotnet publish StickyHomeworks/StickyHomeworks.csproj `
-            -c Release `
+            -c ${{ github.event.inputs.configuration || 'Release' }} `
             -r win-x64 `
             --self-contained true `
             -p:PublishSingleFile=true `
             -p:IncludeNativeLibrariesForSelfExtract=true `
             -o ./publish
 
-      - name: Upload artifact
+      - name: 打包为 ZIP
+        run: |
+          Compress-Archive -Path ./publish/* -DestinationPath ./StickyHomeworks.zip
+
+      - name: 上传 EXE 产物
         uses: actions/upload-artifact@v4
         with:
-          name: StickyHomeworks
+          name: StickyHomeworks-EXE
           path: ./publish/StickyHomeworks.exe
+          retention-days: 30
 
-      - name: Create Release
-        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v1
+      - name: 上传 ZIP 产物
+        uses: actions/upload-artifact@v4
         with:
-          files: ./publish/StickyHomeworks.exe
-          generate_release_notes: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: StickyHomeworks-ZIP
+          path: ./StickyHomeworks.zip
+          retention-days: 30
+
+      - name: 输出构建信息
+        run: |
+          Write-Host "========================================"
+          Write-Host "构建完成！"
+          Write-Host "========================================"
+          Write-Host "文件位置: ./publish/StickyHomeworks.exe"
+          Write-Host "ZIP 位置: ./StickyHomeworks.zip"
+          Write-Host "文件大小: $([math]::Round((Get-Item ./publish/StickyHomeworks.exe).Length / 1MB, 2)) MB"
+          Write-Host "========================================"
