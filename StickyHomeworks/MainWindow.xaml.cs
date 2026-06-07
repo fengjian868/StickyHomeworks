@@ -54,6 +54,19 @@ public partial class MainWindow : Window
         ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
         ViewModel.PropertyChanging += ViewModelOnPropertyChanging;
         DataContext = this;
+        ProfileService.Profile.Homeworks.CollectionChanged += HomeworksOnCollectionChanged;
+    }
+
+    private void HomeworksOnCollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+        Dispatcher.Invoke(() => UpdateAddButtonVisibility());
+    }
+
+    private void UpdateAddButtonVisibility()
+    {
+        var hasHomeworks = ProfileService.Profile.Homeworks.Count > 0;
+        ButtonAddHomeworkCenter.Visibility = hasHomeworks ? Visibility.Collapsed : Visibility.Visible;
+        ButtonAddHomeworkBottom.Visibility = hasHomeworks ? Visibility.Visible : Visibility.Collapsed;
     }
 
     private void FocusObserverServiceOnFocusChanged(object? sender, EventArgs e)
@@ -161,6 +174,7 @@ public partial class MainWindow : Window
     {
         SetBottom();
         SetPos();
+        UpdateAddButtonVisibility();
         AppEx.GetService<HomeworkEditWindow>().EditingFinished += OnEditingFinished;
         AppEx.GetService<HomeworkEditWindow>().SubjectChanged += OnSubjectChanged;
         base.OnContentRendered(e);
@@ -517,5 +531,13 @@ public partial class MainWindow : Window
         ViewModel.IsUnlocked = false;
         SizeToContent = SizeToContent.Height;
         Width = Math.Min(ActualWidth, 350);
+    }
+
+    private void MainScrollViewer_OnPreviewMouseWheel(object sender, MouseWheelEventArgs e)
+    {
+        var scrollViewer = (ScrollViewer)sender;
+        var speed = SettingsService.Settings.AutoScrollSpeed;
+        scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - e.Delta * speed);
+        e.Handled = true;
     }
 }

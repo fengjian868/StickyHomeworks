@@ -118,11 +118,10 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition />
-                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <!-- 背景 -->
                 <Border Grid.Row="0"
-                        Grid.RowSpan="3"
+                        Grid.RowSpan="2"
                         Background="{DynamicResource MaterialDesignPaper}"
                         Opacity="{Binding SettingsService.Settings.Opacity}" />
                 <!-- 标题栏 -->
@@ -249,106 +248,123 @@
                     </Grid>
                 </materialDesign:ColorZone>
 
-                <!-- 作业列表 -->
-                <ListView Grid.Row="1"
-                          Focusable="False"
-                          IsTabStop="False"
-                          Margin="8"
-                          FocusVisualStyle="{StaticResource BlankFocusVisualStyle}"
-                          HorizontalContentAlignment="Stretch"
-                          SelectionMode="Single"
-                          ItemsSource="{Binding Source={StaticResource SourceGrouped}}"
-                          SelectedItem="{Binding ViewModel.SelectedHomework}"
-                          ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                          ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                          ScrollViewer.CanContentScroll="False"
-                          SelectionChanged="MainListView_OnSelectionChanged"
-                          Visibility="{Binding ViewModel.IsExpanded, Converter={StaticResource BooleanToVisibilityConverter}}"
-                          x:Name="MainListView" 
-                          d:ItemsSource="{d:SampleData ItemCount=5}">
-                    <ListView.LayoutTransform>
-                        <TransformGroup>
-                            <ScaleTransform ScaleX="{Binding SettingsService.Settings.Scale, Mode=OneWay}"
-                                            ScaleY="{Binding SettingsService.Settings.Scale, Mode=OneWay}" />
-                            <SkewTransform />
-                            <RotateTransform />
-                            <TranslateTransform />
-                        </TransformGroup>
-                    </ListView.LayoutTransform>
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
-                            <Setter Property="Padding" Value="24 0 0 0" />
-                            <Setter Property="materialDesign:BehaviorsAssist.Behaviors">
-                                <Setter.Value>
-                                    <materialDesign:BehaviorCollection>
-                                        <behaviors:ControlExposeBehavior Condition="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType=ListBoxItem}}"
-                                                                         ExposedControl="{Binding ViewModel.SelectedListBoxItem, RelativeSource={RelativeSource FindAncestor, AncestorType=local:MainWindow}, Mode=OneWayToSource}"/>
-                                    </materialDesign:BehaviorCollection>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                    <ListView.GroupStyle>
-                        <GroupStyle>
-                            <GroupStyle.Panel>
-                                <ItemsPanelTemplate>
-                                    <WrapPanel Orientation="Vertical" FocusVisualStyle="{x:Null}">
-                                        <WrapPanel.ItemWidth>
-                                            <MultiBinding Converter="{StaticResource MinValueMultiConverter}"
-                                                          Mode="OneWay">
-                                                <Binding Path="ActualWidth" ElementName="MainListView" Mode="OneWay" />
-                                                <Binding Path="SettingsService.Settings.MaxPanelWidth" Mode="OneWay" />
-                                            </MultiBinding>
-                                        </WrapPanel.ItemWidth>
-                                    </WrapPanel>
-                                </ItemsPanelTemplate>
-                            </GroupStyle.Panel>
-                            <GroupStyle.ContainerStyle>
-                                <Style TargetType="{x:Type GroupItem}">
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="{x:Type GroupItem}">
-                                                <StackPanel>
-                                                    <TextBlock Text="{Binding Name}" FontSize="22" FontWeight="Bold" />
-                                                    <ItemsPresenter />
-                                                </StackPanel>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
-                            </GroupStyle.ContainerStyle>
-                        </GroupStyle>
-                    </ListView.GroupStyle>
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel>
-                                <controls:HomeworkControl Grid.Column="0"
-                                                          IsEditing="{Binding ViewModel.IsDrawerOpened, RelativeSource={RelativeSource FindAncestor, AncestorType=local:MainWindow}}"
-                                                          IsSelected="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType=ListBoxItem}, Mode=OneWay}"
-                                                          HorizontalAlignment="Stretch"
-                                                          Homework="{Binding}" />
-                                <StackPanel Grid.Column="1" Orientation="Horizontal"
-                                            Visibility="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType=ListBoxItem}, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                    <Button Content="{materialDesign:PackIcon EditOutline}"
-                                            Style="{StaticResource MaterialDesignToolForegroundButton}"
-                                            Margin="4 0" ToolTip="编辑" Click="ButtonEditHomework_OnClick" />
-                                    <Button Content="{materialDesign:PackIcon DeleteOutline}"
-                                            Style="{StaticResource MaterialDesignToolForegroundButton}"
-                                            Margin="4 0" ToolTip="删除" Foreground="IndianRed"
-                                            Click="ButtonRemoveHomework_OnClick" />
-                                </StackPanel>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-
-                <!-- 布置作业 -->
-                <Button Grid.Row="2"
-                        Click="ButtonCreateHomework_OnClick"
-                        Visibility="{Binding ViewModel.IsExpanded, Converter={StaticResource BooleanToVisibilityConverter}}"
-                        Style="{StaticResource MaterialDesignFlatButton}">
-                    <ely:IconText Kind="Add" Text="布置作业" />
-                </Button>
+                <!-- 作业列表 + 布置作业 -->
+                <Grid Grid.Row="1"
+                      Visibility="{Binding ViewModel.IsExpanded, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <!-- 无作业时居中的布置作业按钮 -->
+                    <Button HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Click="ButtonCreateHomework_OnClick"
+                            Style="{StaticResource MaterialDesignFlatButton}"
+                            x:Name="ButtonAddHomeworkCenter">
+                        <ely:IconText Kind="Add" Text="布置作业" />
+                    </Button>
+                    <!-- 作业列表 -->
+                    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                  HorizontalScrollBarVisibility="Disabled"
+                                  materialDesign:ScrollViewerAssist.IsAutoHideEnabled="True"
+                                  x:Name="MainScrollViewer"
+                                  PreviewMouseWheel="MainScrollViewer_OnPreviewMouseWheel">
+                        <StackPanel>
+                            <ListView Focusable="False"
+                                      IsTabStop="False"
+                                      Margin="8"
+                                      FocusVisualStyle="{StaticResource BlankFocusVisualStyle}"
+                                      HorizontalContentAlignment="Stretch"
+                                      SelectionMode="Single"
+                                      ItemsSource="{Binding Source={StaticResource SourceGrouped}}"
+                                      SelectedItem="{Binding ViewModel.SelectedHomework}"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                      ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                      ScrollViewer.CanContentScroll="False"
+                                      SelectionChanged="MainListView_OnSelectionChanged"
+                                      x:Name="MainListView" 
+                                      d:ItemsSource="{d:SampleData ItemCount=5}">
+                                <ListView.LayoutTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform ScaleX="{Binding SettingsService.Settings.Scale, Mode=OneWay}"
+                                                        ScaleY="{Binding SettingsService.Settings.Scale, Mode=OneWay}" />
+                                        <SkewTransform />
+                                        <RotateTransform />
+                                        <TranslateTransform />
+                                    </TransformGroup>
+                                </ListView.LayoutTransform>
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                                        <Setter Property="Padding" Value="24 0 0 0" />
+                                        <Setter Property="materialDesign:BehaviorsAssist.Behaviors">
+                                            <Setter.Value>
+                                                <materialDesign:BehaviorCollection>
+                                                    <behaviors:ControlExposeBehavior Condition="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType=ListBoxItem}}"
+                                                                                     ExposedControl="{Binding ViewModel.SelectedListBoxItem, RelativeSource={RelativeSource FindAncestor, AncestorType=local:MainWindow}, Mode=OneWayToSource}"/>
+                                                </materialDesign:BehaviorCollection>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                                <ListView.GroupStyle>
+                                    <GroupStyle>
+                                        <GroupStyle.Panel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel Orientation="Vertical" FocusVisualStyle="{x:Null}">
+                                                    <WrapPanel.ItemWidth>
+                                                        <MultiBinding Converter="{StaticResource MinValueMultiConverter}"
+                                                                      Mode="OneWay">
+                                                            <Binding Path="ActualWidth" ElementName="MainListView" Mode="OneWay" />
+                                                            <Binding Path="SettingsService.Settings.MaxPanelWidth" Mode="OneWay" />
+                                                        </MultiBinding>
+                                                    </WrapPanel.ItemWidth>
+                                                </WrapPanel>
+                                            </ItemsPanelTemplate>
+                                        </GroupStyle.Panel>
+                                        <GroupStyle.ContainerStyle>
+                                            <Style TargetType="{x:Type GroupItem}">
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="{x:Type GroupItem}">
+                                                            <StackPanel>
+                                                                <TextBlock Text="{Binding Name}" FontSize="22" FontWeight="Bold" />
+                                                                <ItemsPresenter />
+                                                            </StackPanel>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </GroupStyle.ContainerStyle>
+                                    </GroupStyle>
+                                </ListView.GroupStyle>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel>
+                                            <controls:HomeworkControl Grid.Column="0"
+                                                                      IsEditing="{Binding ViewModel.IsDrawerOpened, RelativeSource={RelativeSource FindAncestor, AncestorType=local:MainWindow}}"
+                                                                      IsSelected="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType=ListBoxItem}, Mode=OneWay}"
+                                                                      HorizontalAlignment="Stretch"
+                                                                      Homework="{Binding}" />
+                                            <StackPanel Grid.Column="1" Orientation="Horizontal"
+                                                        Visibility="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType=ListBoxItem}, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                <Button Content="{materialDesign:PackIcon EditOutline}"
+                                                        Style="{StaticResource MaterialDesignToolForegroundButton}"
+                                                        Margin="4 0" ToolTip="编辑" Click="ButtonEditHomework_OnClick" />
+                                                <Button Content="{materialDesign:PackIcon DeleteOutline}"
+                                                        Style="{StaticResource MaterialDesignToolForegroundButton}"
+                                                        Margin="4 0" ToolTip="删除" Foreground="IndianRed"
+                                                        Click="ButtonRemoveHomework_OnClick" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                            <!-- 有作业时底部的布置作业按钮 -->
+                            <Button Click="ButtonCreateHomework_OnClick"
+                                    Style="{StaticResource MaterialDesignFlatButton}"
+                                    Margin="8 0 8 8"
+                                    x:Name="ButtonAddHomeworkBottom">
+                                <ely:IconText Kind="Add" Text="布置作业" />
+                            </Button>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
 
                 <!-- 保存中 -->
                 <!--<Canvas Grid.Row="1" Margin="0,30,50,0" HorizontalAlignment="Right" VerticalAlignment="Top">
@@ -408,7 +424,7 @@
                 </StackPanel>
 
                 <!-- Snackbar -->
-                <materialDesign:Snackbar Grid.Row="0" Grid.RowSpan="3"
+                <materialDesign:Snackbar Grid.Row="0" Grid.RowSpan="2"
                                          MessageQueue="{Binding ViewModel.SnackbarMessageQueue}"/>
             </Grid>
         </materialDesign:DrawerHost>

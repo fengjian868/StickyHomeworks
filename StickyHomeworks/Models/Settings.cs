@@ -38,6 +38,7 @@ public class Settings : ObservableRecipient
     private ObservableCollection<Color> _savedColors = new();
     private ObservableCollection<string> _customKeyboardButtons = new();
     private bool _isCustomKeyboardEnabled = true;
+    private double _autoScrollSpeed = 1.0;
 
     public double WindowX
     {
@@ -382,6 +383,17 @@ public class Settings : ObservableRecipient
         {
             if (value == _isCustomKeyboardEnabled) return;
             _isCustomKeyboardEnabled = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public double AutoScrollSpeed
+    {
+        get => _autoScrollSpeed;
+        set
+        {
+            if (value.Equals(_autoScrollSpeed)) return;
+            _autoScrollSpeed = value;
             OnPropertyChanged();
         }
     }

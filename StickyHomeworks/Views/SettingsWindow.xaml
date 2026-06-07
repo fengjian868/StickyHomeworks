@@ -276,6 +276,20 @@
                                                              materialDesign:TextFieldAssist.SuffixText="px"/>
                                     </ely:SettingsCard.Switcher>
                                 </ely:SettingsCard>
+                                <!-- 滚动速度 -->
+                                <ely:SettingsCard IconGlyph="SwapVertical" Header="滚动速度"
+                                                  Description="作业列表的滚动速度倍率。">
+                                    <ely:SettingsCard.Switcher>
+                                        <Slider Width="180" Minimum="0.1" Maximum="5"
+                                                VerticalAlignment="Center"
+                                                Value="{Binding Settings.AutoScrollSpeed}"
+                                                AutoToolTipPlacement="BottomRight"
+                                                TickFrequency="0.1"
+                                                TickPlacement="None"
+                                                IsSnapToTickEnabled="True"
+                                                AutoToolTipPrecision="1" />
+                                    </ely:SettingsCard.Switcher>
+                                </ely:SettingsCard>
                                 
                             </StackPanel>
                         </ScrollViewer>
