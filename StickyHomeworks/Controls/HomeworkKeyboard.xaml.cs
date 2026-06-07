@@ -121,17 +121,12 @@ public partial class HomeworkKeyboard : UserControl
         if (TargetRichTextBox == null) return;
 
         TargetRichTextBox.Focus();
+        // 始终将光标移到文档末尾再插入
+        TargetRichTextBox.CaretPosition = TargetRichTextBox.Document.ContentEnd;
         var selection = TargetRichTextBox.Selection;
-        if (selection.IsEmpty)
-        {
-            selection.Text = text;
-        }
-        else
-        {
-            selection.Text = text;
-        }
-        // 将光标移到插入文本之后
-        TargetRichTextBox.CaretPosition = selection.End;
+        selection.Text = text;
+        // 插入后光标保持在末尾
+        TargetRichTextBox.CaretPosition = TargetRichTextBox.Document.ContentEnd;
     }
 
     private void ButtonBackspace_OnClick(object sender, RoutedEventArgs e)
