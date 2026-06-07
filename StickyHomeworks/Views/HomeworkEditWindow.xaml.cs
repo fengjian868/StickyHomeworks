@@ -98,6 +98,11 @@ public partial class HomeworkEditWindow : Window, INotifyPropertyChanged
             {
                 _keyboardWindow.Keyboard.TargetRichTextBox = value;
             }
+            // 如果窗口已打开但键盘未显示，则显示键盘
+            if (IsOpened && SettingsService.Settings.IsCustomKeyboardEnabled)
+            {
+                UpdateKeyboardVisibility();
+            }
         }
     }
 
@@ -108,6 +113,12 @@ public partial class HomeworkEditWindow : Window, INotifyPropertyChanged
         DataContext = this;
         InitializeComponent();
         ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
+    }
+
+    private void DragBar_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        if (e.ClickCount == 2) return;
+        DragMove();
     }
 
     protected override void OnInitialized(EventArgs e)

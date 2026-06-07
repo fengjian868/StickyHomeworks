@@ -25,7 +25,8 @@
         SizeToContent="Height"
         AllowsTransparency="True"
         Icon="/Assets/AppLogo.png"
-        Title="编辑作业" Height="450" Width="300">
+        Title="编辑作业" Height="450" Width="300"
+        Opacity="0.95">
     <Window.Resources>
         <ely:IntToStringConverter x:Key="IntToStringConverter" />
         <converter:ColorToBrushConverter x:Key="ColorToBrushConverter" />
@@ -35,7 +36,8 @@
                       ResizeBorderThickness="4"/>
     </WindowChrome.WindowChrome>
     <materialDesign:Card Margin="6"
-            Background="{DynamicResource MaterialDesignPaper}">
+            Background="{DynamicResource MaterialDesignPaper}"
+            Opacity="0.95">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -43,7 +45,8 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Grid Grid.Row="0" Background="{DynamicResource MaterialDesignToolBarBackground}">
+            <Grid Grid.Row="0" Background="{DynamicResource MaterialDesignToolBarBackground}"
+                  MouseLeftButtonDown="DragBar_OnMouseLeftButtonDown">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="3*"/>
