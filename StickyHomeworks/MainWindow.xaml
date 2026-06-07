@@ -264,9 +264,9 @@
                                   HorizontalScrollBarVisibility="Disabled"
                                   materialDesign:ScrollViewerAssist.IsAutoHideEnabled="True"
                                   x:Name="MainScrollViewer"
-                                  PreviewMouseWheel="MainScrollViewer_OnPreviewMouseWheel">
-                        <StackPanel>
-                            <ListView Focusable="False"
+                                  PreviewMouseWheel="MainScrollViewer_OnPreviewMouseWheel"
+                                  Margin="0 0 0 40">
+                        <ListView Focusable="False"
                                       IsTabStop="False"
                                       Margin="8"
                                       FocusVisualStyle="{StaticResource BlankFocusVisualStyle}"
@@ -355,15 +355,16 @@
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                             </ListView>
-                            <!-- 有作业时底部的布置作业按钮 -->
-                            <Button Click="ButtonCreateHomework_OnClick"
-                                    Style="{StaticResource MaterialDesignFlatButton}"
-                                    Margin="8 0 8 8"
-                                    x:Name="ButtonAddHomeworkBottom">
-                                <ely:IconText Kind="Add" Text="布置作业" />
-                            </Button>
-                        </StackPanel>
                     </ScrollViewer>
+                    <!-- 有作业时底部的布置作业按钮（固定在底部） -->
+                    <Button VerticalAlignment="Bottom"
+                            HorizontalAlignment="Center"
+                            Click="ButtonCreateHomework_OnClick"
+                            Style="{StaticResource MaterialDesignFlatButton}"
+                            Margin="0 0 0 4"
+                            x:Name="ButtonAddHomeworkBottom">
+                        <ely:IconText Kind="Add" Text="布置作业" />
+                    </Button>
                 </Grid>
 
                 <!-- 保存中 -->
