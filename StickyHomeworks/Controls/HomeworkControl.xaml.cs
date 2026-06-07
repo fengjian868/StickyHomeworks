@@ -80,11 +80,19 @@ public partial class HomeworkControl : UserControl
 
     private async void EnterEdit()
     {
+        var caretPos = RichTextBox.CaretPosition;
         AppEx.GetService<HomeworkEditWindow>().RelatedRichTextBox = RichTextBox;
         await System.Windows.Threading.Dispatcher.Yield();
         RichTextBox.Focus();
-        //RichTextBox.Selection.Select(new TextPointer());
-        RichTextBox.CaretPosition = RichTextBox.CaretPosition.DocumentEnd;
+        // 恢复之前的光标位置，如果没有则放到末尾
+        if (caretPos != null && caretPos.CompareTo(RichTextBox.Document.ContentStart) >= 0 && caretPos.CompareTo(RichTextBox.Document.ContentEnd) <= 0)
+        {
+            RichTextBox.CaretPosition = caretPos;
+        }
+        else
+        {
+            RichTextBox.CaretPosition = RichTextBox.Document.ContentEnd;
+        }
     }
 
     private void IsSelectedChanged(bool value)

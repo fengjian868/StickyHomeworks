@@ -129,7 +129,8 @@
                                           Mode="PrimaryMid"
                                           Padding="6"
                                           materialDesign:ElevationAssist.Elevation="Dp2"
-                                          MouseDown="DragBorder_OnMouseDown">
+                                          MouseDown="DragBorder_OnMouseDown"
+                                          Opacity="{Binding SettingsService.Settings.Opacity}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
@@ -251,14 +252,6 @@
                 <!-- 作业列表 + 布置作业 -->
                 <Grid Grid.Row="1"
                       Visibility="{Binding ViewModel.IsExpanded, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <!-- 无作业时居中的布置作业按钮 -->
-                    <Button HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Click="ButtonCreateHomework_OnClick"
-                            Style="{StaticResource MaterialDesignFlatButton}"
-                            x:Name="ButtonAddHomeworkCenter">
-                        <ely:IconText Kind="Add" Text="布置作业" />
-                    </Button>
                     <!-- 作业列表 -->
                     <ScrollViewer VerticalScrollBarVisibility="Auto"
                                   HorizontalScrollBarVisibility="Disabled"
@@ -356,6 +349,14 @@
                                 </ListView.ItemTemplate>
                             </ListView>
                     </ScrollViewer>
+                    <!-- 无作业时居中的布置作业按钮 -->
+                    <Button HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Click="ButtonCreateHomework_OnClick"
+                            Style="{StaticResource MaterialDesignFlatButton}"
+                            x:Name="ButtonAddHomeworkCenter">
+                        <ely:IconText Kind="Add" Text="布置作业" />
+                    </Button>
                     <!-- 有作业时底部的布置作业按钮（固定在底部） -->
                     <Button VerticalAlignment="Bottom"
                             HorizontalAlignment="Center"
