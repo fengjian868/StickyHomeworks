@@ -78,7 +78,7 @@ public partial class HomeworkKeyboard : UserControl
         AddButtons(LetterPanel, new[] { "A", "B", "C", "D", "P" }, "letter");
     }
 
-    private void AddButtons(WrapPanel panel, string[] texts, string category)
+    private void AddButtons(Panel panel, string[] texts, string category)
     {
         panel.Children.Clear();
         foreach (var text in texts)
