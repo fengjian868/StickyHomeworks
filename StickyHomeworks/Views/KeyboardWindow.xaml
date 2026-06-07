@@ -1,0 +1,15 @@
+<Window x:Class="StickyHomeworks.Views.KeyboardWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:StickyHomeworks.Controls"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        ShowInTaskbar="False"
+        ShowActivated="False"
+        Topmost="True"
+        ResizeMode="NoResize"
+        Background="{x:Null}"
+        SizeToContent="Height"
+        Title="键盘">
+    <controls:HomeworkKeyboard x:Name="KeyboardControl"/>
+</Window>

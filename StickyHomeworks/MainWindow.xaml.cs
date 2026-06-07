@@ -298,11 +298,29 @@ public partial class MainWindow : Window
         try
         {
             GetCurrentDpi(out var dpiX, out var dpiY);
-            var p = ViewModel.SelectedListBoxItem.PointToScreen(new Point(ViewModel.SelectedListBoxItem.ActualWidth, 0));
             var screen = Screen.PrimaryScreen!.WorkingArea;
             var homeworkEditWindow = AppEx.GetService<HomeworkEditWindow>();
-            homeworkEditWindow.Left = p.X / dpiX;
-            homeworkEditWindow.Top = Math.Min(p.Y, screen.Bottom - homeworkEditWindow.ActualHeight * dpiY) / dpiY;
+            var editWidth = homeworkEditWindow.ActualWidth * dpiX;
+            var editHeight = homeworkEditWindow.ActualHeight * dpiY;
+
+            // 获取选中项的右边缘和左边缘屏幕坐标
+            var rightPoint = ViewModel.SelectedListBoxItem.PointToScreen(new Point(ViewModel.SelectedListBoxItem.ActualWidth, 0));
+            var leftPoint = ViewModel.SelectedListBoxItem.PointToScreen(new Point(0, 0));
+
+            double editLeftScreen;
+            if (rightPoint.X + editWidth <= screen.Right)
+            {
+                // 右边空间足够，放在右边
+                editLeftScreen = rightPoint.X;
+            }
+            else
+            {
+                // 右边空间不足，放在左边
+                editLeftScreen = leftPoint.X - editWidth;
+            }
+
+            homeworkEditWindow.Left = Math.Max(0, editLeftScreen) / dpiX;
+            homeworkEditWindow.Top = Math.Min(rightPoint.Y, screen.Bottom - editHeight) / dpiY;
         }
         catch (Exception e)
         {

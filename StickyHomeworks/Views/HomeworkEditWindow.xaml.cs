@@ -39,6 +39,8 @@ public partial class HomeworkEditWindow : Window, INotifyPropertyChanged
 
     public event EventHandler? SubjectChanged;
 
+    private KeyboardWindow? _keyboardWindow;
+
     public void TryOpen()
     {
         if (IsOpened)
@@ -53,25 +55,24 @@ public partial class HomeworkEditWindow : Window, INotifyPropertyChanged
     {
         if (SettingsService.Settings.IsCustomKeyboardEnabled)
         {
-            CustomKeyboard.Visibility = Visibility.Visible;
-            CustomKeyboard.TargetRichTextBox = RelatedRichTextBox;
+            _keyboardWindow ??= new KeyboardWindow();
+            _keyboardWindow.Keyboard.TargetRichTextBox = RelatedRichTextBox;
             // 转换自定义按钮字符串为 KeyboardButton 对象
             var buttons = new ObservableCollection<Models.KeyboardButton>();
             foreach (var btn in SettingsService.Settings.CustomKeyboardButtons)
             {
                 buttons.Add(new Models.KeyboardButton(btn, "custom"));
             }
-            CustomKeyboard.CustomButtons = buttons;
+            _keyboardWindow.Keyboard.CustomButtons = buttons;
+            if (!_keyboardWindow.IsVisible)
+            {
+                _keyboardWindow.ShowKeyboard();
+            }
         }
         else
         {
-            CustomKeyboard.Visibility = Visibility.Collapsed;
+            _keyboardWindow?.Hide();
         }
-    }
-
-    private void CustomKeyboard_OnCloseRequested(object? sender, EventArgs e)
-    {
-        CustomKeyboard.Visibility = Visibility.Collapsed;
     }
 
     public void TryClose()
@@ -79,6 +80,7 @@ public partial class HomeworkEditWindow : Window, INotifyPropertyChanged
         if (!IsOpened)
             return;
         IsOpened = false;
+        _keyboardWindow?.Hide();
         Hide();
     }
 
@@ -91,6 +93,11 @@ public partial class HomeworkEditWindow : Window, INotifyPropertyChanged
             RegisterNewTextBox(value);
             _relatedRichTextBox = value;
             OnPropertyChanged();
+            // 更新键盘的目标输入框
+            if (_keyboardWindow != null && SettingsService.Settings.IsCustomKeyboardEnabled)
+            {
+                _keyboardWindow.Keyboard.TargetRichTextBox = value;
+            }
         }
     }
 
