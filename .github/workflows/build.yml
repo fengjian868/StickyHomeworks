@@ -1,6 +1,8 @@
 name: Build and Release
 
 on:
+  push:
+    branches: [master]
   workflow_dispatch:
 
 jobs:
@@ -40,12 +42,12 @@ jobs:
           echo "tag=$tag" >> $env:GITHUB_OUTPUT
 
       - name: Create Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.tag.outputs.tag }}
           name: Release ${{ steps.tag.outputs.tag }}
+          body: ""
           files: |
-            ./publish/StickyHomeworks.exe
             ./StickyHomeworks.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
