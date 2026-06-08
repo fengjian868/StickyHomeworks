@@ -62,12 +62,19 @@ public partial class MainWindow : Window
         Dispatcher.Invoke(() =>
         {
             UpdateAddButtonVisibility();
-            // 作业列表变化时自动滚动到底部
+            // 作业列表变化时，如果内容超出显示范围则自动滚动到底部
             if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
             {
                 Dispatcher.BeginInvoke(new Action(() =>
                 {
-                    MainScrollViewer.ScrollToVerticalOffset(MainScrollViewer.ScrollableHeight);
+                    // 检查作业列表总高度是否超过 ScrollViewer 的可视高度
+                    var contentHeight = MainListView.ActualHeight;
+                    var viewportHeight = MainScrollViewer.ViewportHeight;
+                    // 如果内容高度超过可视区域，才自动滚动到底部
+                    if (contentHeight > viewportHeight)
+                    {
+                        MainScrollViewer.ScrollToVerticalOffset(MainScrollViewer.ScrollableHeight);
+                    }
                 }), System.Windows.Threading.DispatcherPriority.Render);
             }
         });
