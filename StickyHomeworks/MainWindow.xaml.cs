@@ -65,17 +65,18 @@ public partial class MainWindow : Window
             // 作业列表变化时，如果内容超出显示范围则自动滚动到底部
             if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
             {
-                Dispatcher.BeginInvoke(new Action(() =>
+                // 多次延迟确保 UI 完全渲染后再检查和滚动
+                for (int i = 0; i < 5; i++)
                 {
-                    // 检查作业列表总高度是否超过 ScrollViewer 的可视高度
-                    var contentHeight = MainListView.ActualHeight;
-                    var viewportHeight = MainScrollViewer.ViewportHeight;
-                    // 如果内容高度超过可视区域，才自动滚动到底部
-                    if (contentHeight > viewportHeight)
+                    Dispatcher.BeginInvoke(new Action(() =>
                     {
-                        MainScrollViewer.ScrollToVerticalOffset(MainScrollViewer.ScrollableHeight);
-                    }
-                }), System.Windows.Threading.DispatcherPriority.Render);
+                        // 检查是否有可滚动的内容（ScrollableHeight > 0 表示有超出部分）
+                        if (MainScrollViewer.ScrollableHeight > 0)
+                        {
+                            MainScrollViewer.ScrollToVerticalOffset(MainScrollViewer.ScrollableHeight);
+                        }
+                    }), System.Windows.Threading.DispatcherPriority.Background);
+                }
             }
         });
     }

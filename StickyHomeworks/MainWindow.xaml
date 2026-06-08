@@ -271,6 +271,7 @@
                                       ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                       ScrollViewer.VerticalScrollBarVisibility="Disabled"
                                       ScrollViewer.CanContentScroll="False"
+                                      VirtualizingStackPanel.IsVirtualizing="False"
                                       SelectionChanged="MainListView_OnSelectionChanged"
                                       x:Name="MainListView" 
                                       d:ItemsSource="{d:SampleData ItemCount=5}">
