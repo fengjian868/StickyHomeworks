@@ -5,11 +5,10 @@
         WindowStyle="None"
         AllowsTransparency="True"
         ShowInTaskbar="False"
-        ShowActivated="False"
         Topmost="True"
         ResizeMode="NoResize"
         Background="{x:Null}"
-        SizeToContent="Height"
+        SizeToContent="WidthAndHeight"
         Title="键盘"
         Opacity="0.8">
     <Window.Resources>

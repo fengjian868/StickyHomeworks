@@ -6,15 +6,15 @@
              xmlns:local="clr-namespace:StickyHomeworks.Controls"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
-             d:DesignHeight="320" d:DesignWidth="560">
+             d:DesignHeight="380" d:DesignWidth="600">
     <UserControl.Resources>
         <!-- Win11 风格按键 -->
         <Style x:Key="Win11KeyStyle" TargetType="Button">
             <Setter Property="Margin" Value="2"/>
-            <Setter Property="Padding" Value="4 6"/>
-            <Setter Property="MinWidth" Value="32"/>
-            <Setter Property="MinHeight" Value="36"/>
-            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Padding" Value="2 4"/>
+            <Setter Property="MinWidth" Value="28"/>
+            <Setter Property="MinHeight" Value="32"/>
+            <Setter Property="FontSize" Value="12"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}"/>
             <Setter Property="Background" Value="{DynamicResource MaterialDesignPaper}"/>
@@ -48,7 +48,15 @@
         <!-- 功能键样式 -->
         <Style x:Key="Win11ActionKeyStyle" TargetType="Button" BasedOn="{StaticResource Win11KeyStyle}">
             <Setter Property="Background" Value="{DynamicResource MaterialDesignToolBarBackground}"/>
-            <Setter Property="MinWidth" Value="48"/>
+            <Setter Property="MinWidth" Value="44"/>
+        </Style>
+        <!-- 完成按钮样式 -->
+        <Style x:Key="Win11DoneKeyStyle" TargetType="Button" BasedOn="{StaticResource Win11KeyStyle}">
+            <Setter Property="Background" Value="{DynamicResource PrimaryHueMidBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidForegroundBrush}"/>
+            <Setter Property="MinWidth" Value="120"/>
+            <Setter Property="MinHeight" Value="36"/>
+            <Setter Property="FontSize" Value="14"/>
         </Style>
         <!-- 分类标签 -->
         <Style x:Key="CategoryLabelStyle" TargetType="TextBlock">
@@ -91,10 +99,12 @@
                 <!-- 其他 -->
                 <RowDefinition Height="Auto"/>
                 <!-- 操作 -->
+                <RowDefinition Height="Auto"/>
+                <!-- 完成 -->
             </Grid.RowDefinitions>
 
             <!-- 拖动手柄 -->
-            <Grid Grid.Row="0" Height="20" Cursor="SizeAll">
+            <Grid Grid.Row="0" Height="20" Cursor="SizeAll" MouseLeftButtonDown="DragHandle_OnMouseLeftButtonDown">
                 <Border Width="40" Height="4" CornerRadius="2"
                         Background="{DynamicResource MaterialDesignBodyLight}"
                         VerticalAlignment="Center" HorizontalAlignment="Center"/>
@@ -107,7 +117,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="数字" Style="{StaticResource CategoryLabelStyle}"/>
-                <UniformGrid Grid.Column="1" x:Name="NumberPanel" Columns="10"/>
+                <UniformGrid Grid.Column="1" x:Name="NumberPanel" Columns="11"/>
             </Grid>
 
             <!-- 中文数字行 -->
@@ -117,7 +127,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="数字" Style="{StaticResource CategoryLabelStyle}"/>
-                <UniformGrid Grid.Column="1" x:Name="ChineseNumberPanel" Columns="10"/>
+                <UniformGrid Grid.Column="1" x:Name="ChineseNumberPanel" Columns="11"/>
             </Grid>
 
             <!-- 书本行 -->
@@ -198,13 +208,20 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="操作" Style="{StaticResource CategoryLabelStyle}"/>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Content="&#x2190;" Style="{StaticResource Win11ActionKeyStyle}"
+                    <Button Content="&#x232B;" Style="{StaticResource Win11ActionKeyStyle}"
                             ToolTip="删除" Click="ButtonBackspace_OnClick"/>
                     <Button Content="&#x23CE;" Style="{StaticResource Win11ActionKeyStyle}"
                             ToolTip="换行" Click="ButtonEnter_OnClick"/>
                     <Button Content="&#x2715;" Style="{StaticResource Win11ActionKeyStyle}"
                             ToolTip="关闭" Click="ButtonClose_OnClick"/>
                 </StackPanel>
+            </Grid>
+
+            <!-- 完成按钮行 -->
+            <Grid Grid.Row="11" Margin="4 2 4 6">
+                <Button Content="完成" Style="{StaticResource Win11DoneKeyStyle}"
+                        HorizontalAlignment="Stretch"
+                        Click="ButtonDone_OnClick"/>
             </Grid>
         </Grid>
     </Border>
