@@ -61,7 +61,11 @@ public partial class HomeworkEditWindow : Window, INotifyPropertyChanged
         }
 
         _keyboardWindow ??= new KeyboardWindow();
-        _keyboardWindow.Keyboard.TargetRichTextBox = RelatedRichTextBox;
+        // 确保键盘目标输入框被设置，即使等待超时也显示键盘
+        if (RelatedRichTextBox != null)
+        {
+            _keyboardWindow.Keyboard.TargetRichTextBox = RelatedRichTextBox;
+        }
         var buttons = new ObservableCollection<Models.KeyboardButton>();
         foreach (var btn in SettingsService.Settings.CustomKeyboardButtons)
         {

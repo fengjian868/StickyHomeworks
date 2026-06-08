@@ -40,8 +40,12 @@ public partial class KeyboardWindow : Window
     private void PlaySlideUpAnimation()
     {
         var screen = Screen.PrimaryScreen!.WorkingArea;
+        var dpiY = 96.0 / SystemParameters.DpiScaleY;
         var source = PresentationSource.FromVisual(this);
-        var dpiY = source?.CompositionTarget?.TransformToDevice.M22 ?? 1.0;
+        if (source?.CompositionTarget != null)
+        {
+            dpiY = source.CompositionTarget.TransformToDevice.M22;
+        }
         var height = ActualHeight > 0 ? ActualHeight : 400;
         var targetTop = Math.Clamp(screen.Bottom / dpiY - height, screen.Top / dpiY, screen.Bottom / dpiY - height);
 
@@ -63,8 +67,16 @@ public partial class KeyboardWindow : Window
         }
 
         var screen = Screen.PrimaryScreen!.WorkingArea;
+        // 窗口未渲染时，使用系统 DPI
+        var dpiX = 96.0 / SystemParameters.DpiScaleX;
+        var dpiY = 96.0 / SystemParameters.DpiScaleY;
+        // 如果窗口已渲染，使用窗口的 DPI
         var source = PresentationSource.FromVisual(this);
-        var dpiX = source?.CompositionTarget?.TransformToDevice.M11 ?? 1.0;
+        if (source?.CompositionTarget != null)
+        {
+            dpiX = source.CompositionTarget.TransformToDevice.M11;
+            dpiY = source.CompositionTarget.TransformToDevice.M22;
+        }
         var screenWidth = screen.Width / dpiX;
 
         // 键盘宽度占屏幕 95%，最小 600，最大 1200
@@ -73,7 +85,7 @@ public partial class KeyboardWindow : Window
         // 水平居中
         Left = Math.Clamp((screenWidth - Width) / 2, screen.Left / dpiX, (screen.Right / dpiX) - Width);
         // 初始位置在屏幕底部（动画开始位置）
-        Top = screen.Bottom / (source?.CompositionTarget?.TransformToDevice.M22 ?? 1.0);
+        Top = screen.Bottom / dpiY;
 
         Show();
         Activate();
@@ -89,9 +101,14 @@ public partial class KeyboardWindow : Window
     public void PositionAtBottom()
     {
         var screen = Screen.PrimaryScreen!.WorkingArea;
+        var dpiX = 96.0 / SystemParameters.DpiScaleX;
+        var dpiY = 96.0 / SystemParameters.DpiScaleY;
         var source = PresentationSource.FromVisual(this);
-        var dpiX = source?.CompositionTarget?.TransformToDevice.M11 ?? 1.0;
-        var dpiY = source?.CompositionTarget?.TransformToDevice.M22 ?? 1.0;
+        if (source?.CompositionTarget != null)
+        {
+            dpiX = source.CompositionTarget.TransformToDevice.M11;
+            dpiY = source.CompositionTarget.TransformToDevice.M22;
+        }
 
         var screenWidth = screen.Width / dpiX;
         Width = Math.Clamp(screenWidth * 0.95, 600, 1200);
@@ -104,9 +121,14 @@ public partial class KeyboardWindow : Window
     public void EnsureInScreen()
     {
         var screen = Screen.PrimaryScreen!.WorkingArea;
+        var dpiX = 96.0 / SystemParameters.DpiScaleX;
+        var dpiY = 96.0 / SystemParameters.DpiScaleY;
         var source = PresentationSource.FromVisual(this);
-        var dpiX = source?.CompositionTarget?.TransformToDevice.M11 ?? 1.0;
-        var dpiY = source?.CompositionTarget?.TransformToDevice.M22 ?? 1.0;
+        if (source?.CompositionTarget != null)
+        {
+            dpiX = source.CompositionTarget.TransformToDevice.M11;
+            dpiY = source.CompositionTarget.TransformToDevice.M22;
+        }
 
         var height = ActualHeight > 0 ? ActualHeight : 400;
         Left = Math.Clamp(Left, screen.Left / dpiX, (screen.Right / dpiX) - Width);

@@ -81,7 +81,14 @@ public partial class HomeworkControl : UserControl
     private async void EnterEdit()
     {
         AppEx.GetService<HomeworkEditWindow>().RelatedRichTextBox = RichTextBox;
-        await System.Windows.Threading.Dispatcher.Yield();
+        // 等待 RichTextBox 渲染完成
+        for (int i = 0; i < 20; i++)
+        {
+            if (RichTextBox.ActualWidth > 0)
+                break;
+            await System.Windows.Threading.Dispatcher.Yield();
+            await Task.Delay(30);
+        }
         RichTextBox.Focus();
         RichTextBox.CaretPosition = RichTextBox.Document.ContentEnd;
     }

@@ -233,6 +233,9 @@ public partial class MainWindow : Window
         await System.Windows.Threading.Dispatcher.Yield();
         await Task.Delay(50);
 
+        var editWindow = AppEx.GetService<HomeworkEditWindow>();
+        editWindow.TryOpen();
+
         // 找到对应的 HomeworkControl 并强制进入编辑模式
         var container = MainListView.ItemContainerGenerator.ContainerFromItem(o) as ListBoxItem;
         if (container != null)
@@ -241,8 +244,14 @@ public partial class MainWindow : Window
             homeworkControl?.ForceEnterEdit();
         }
 
-        var editWindow = AppEx.GetService<HomeworkEditWindow>();
-        editWindow.TryOpen();
+        // 等待 SelectedListBoxItem 被设置（ControlExposeBehavior 可能有延迟）
+        for (int i = 0; i < 20; i++)
+        {
+            if (ViewModel.SelectedListBoxItem != null)
+                break;
+            await System.Windows.Threading.Dispatcher.Yield();
+            await Task.Delay(30);
+        }
 
         // 窗口显示后再次定位（此时 ActualWidth 已有值）
         await System.Windows.Threading.Dispatcher.Yield();
