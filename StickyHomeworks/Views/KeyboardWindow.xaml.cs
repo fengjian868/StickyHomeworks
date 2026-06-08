@@ -156,9 +156,9 @@ public partial class KeyboardWindow : Window
         base.OnMouseMove(e);
         if (!_isDragging) return;
         var current = e.GetPosition(this);
-        // 只允许左右移动
         Left += current.X - _dragStartPoint.X;
-        EnsureInScreenHorizontal();
+        Top += current.Y - _dragStartPoint.Y;
+        EnsureInScreen();
     }
 
     protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
