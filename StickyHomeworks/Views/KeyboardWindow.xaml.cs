@@ -1,6 +1,7 @@
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
 using StickyHomeworks.Controls;
 
@@ -40,12 +41,7 @@ public partial class KeyboardWindow : Window
     private void PlaySlideUpAnimation()
     {
         var screen = Screen.PrimaryScreen!.WorkingArea;
-        var dpiY = 96.0 / SystemParameters.DpiScaleY;
-        var source = PresentationSource.FromVisual(this);
-        if (source?.CompositionTarget != null)
-        {
-            dpiY = source.CompositionTarget.TransformToDevice.M22;
-        }
+        var dpiY = GetDpiY();
         var height = ActualHeight > 0 ? ActualHeight : 400;
         var targetTop = Math.Clamp(screen.Bottom / dpiY - height, screen.Top / dpiY, screen.Bottom / dpiY - height);
 
@@ -67,16 +63,8 @@ public partial class KeyboardWindow : Window
         }
 
         var screen = Screen.PrimaryScreen!.WorkingArea;
-        // 窗口未渲染时，使用系统 DPI
-        var dpiX = 96.0 / SystemParameters.DpiScaleX;
-        var dpiY = 96.0 / SystemParameters.DpiScaleY;
-        // 如果窗口已渲染，使用窗口的 DPI
-        var source = PresentationSource.FromVisual(this);
-        if (source?.CompositionTarget != null)
-        {
-            dpiX = source.CompositionTarget.TransformToDevice.M11;
-            dpiY = source.CompositionTarget.TransformToDevice.M22;
-        }
+        var dpiX = GetDpiX();
+        var dpiY = GetDpiY();
         var screenWidth = screen.Width / dpiX;
 
         // 键盘宽度占屏幕 95%，最小 600，最大 1200
@@ -101,14 +89,8 @@ public partial class KeyboardWindow : Window
     public void PositionAtBottom()
     {
         var screen = Screen.PrimaryScreen!.WorkingArea;
-        var dpiX = 96.0 / SystemParameters.DpiScaleX;
-        var dpiY = 96.0 / SystemParameters.DpiScaleY;
-        var source = PresentationSource.FromVisual(this);
-        if (source?.CompositionTarget != null)
-        {
-            dpiX = source.CompositionTarget.TransformToDevice.M11;
-            dpiY = source.CompositionTarget.TransformToDevice.M22;
-        }
+        var dpiX = GetDpiX();
+        var dpiY = GetDpiY();
 
         var screenWidth = screen.Width / dpiX;
         Width = Math.Clamp(screenWidth * 0.95, 600, 1200);
@@ -121,18 +103,36 @@ public partial class KeyboardWindow : Window
     public void EnsureInScreen()
     {
         var screen = Screen.PrimaryScreen!.WorkingArea;
-        var dpiX = 96.0 / SystemParameters.DpiScaleX;
-        var dpiY = 96.0 / SystemParameters.DpiScaleY;
-        var source = PresentationSource.FromVisual(this);
-        if (source?.CompositionTarget != null)
-        {
-            dpiX = source.CompositionTarget.TransformToDevice.M11;
-            dpiY = source.CompositionTarget.TransformToDevice.M22;
-        }
+        var dpiX = GetDpiX();
+        var dpiY = GetDpiY();
 
         var height = ActualHeight > 0 ? ActualHeight : 400;
         Left = Math.Clamp(Left, screen.Left / dpiX, (screen.Right / dpiX) - Width);
         Top = Math.Clamp(Top, screen.Top / dpiY, (screen.Bottom / dpiY) - height);
+    }
+
+    private double GetDpiX()
+    {
+        var source = PresentationSource.FromVisual(this);
+        if (source?.CompositionTarget != null)
+        {
+            return source.CompositionTarget.TransformToDevice.M11;
+        }
+        // 备选方案：使用系统 DPI
+        var matrix = DpiHelper.GetDpiMatrix();
+        return matrix.M11;
+    }
+
+    private double GetDpiY()
+    {
+        var source = PresentationSource.FromVisual(this);
+        if (source?.CompositionTarget != null)
+        {
+            return source.CompositionTarget.TransformToDevice.M22;
+        }
+        // 备选方案：使用系统 DPI
+        var matrix = DpiHelper.GetDpiMatrix();
+        return matrix.M22;
     }
 
     protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
@@ -159,5 +159,25 @@ public partial class KeyboardWindow : Window
         base.OnMouseLeftButtonUp(e);
         _isDragging = false;
         ReleaseMouseCapture();
+    }
+}
+
+// 辅助类，用于获取系统 DPI
+internal static class DpiHelper
+{
+    public static Matrix GetDpiMatrix()
+    {
+        // 使用 HwndSource 获取系统 DPI
+        var hwnd = new System.Windows.Interop.WindowInteropHelper(System.Windows.Application.Current.MainWindow).Handle;
+        if (hwnd != IntPtr.Zero)
+        {
+            var source = System.Windows.Interop.HwndSource.FromHwnd(hwnd);
+            if (source?.CompositionTarget != null)
+            {
+                return source.CompositionTarget.TransformToDevice;
+            }
+        }
+        // 如果无法获取，返回默认 DPI (96)
+        return new Matrix(1.0, 0, 0, 1.0, 0, 0);
     }
 }
