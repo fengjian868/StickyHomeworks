@@ -206,7 +206,7 @@ public partial class MainWindow : Window
         CreateHomework();
     }
 
-    private void CreateHomework()
+    private async void CreateHomework()
     {
         ViewModel.IsUpdatingHomeworkSubject = true;
         OnHomeworkEditorUpdated?.Invoke(this ,EventArgs.Empty);
@@ -224,6 +224,11 @@ public partial class MainWindow : Window
         SettingsService.SaveSettings();
         ProfileService.SaveProfile();
         ViewModel.IsUpdatingHomeworkSubject = false;
+
+        // 等待 UI 渲染完成，确保 HomeworkControl 已创建
+        await System.Windows.Threading.Dispatcher.Yield();
+        await Task.Delay(50);
+
         RepositionEditingWindow();
         AppEx.GetService<HomeworkEditWindow>().TryOpen();
     }
@@ -306,9 +311,7 @@ public partial class MainWindow : Window
 
     private void RepositionEditingWindow()
     {
-        if (ViewModel.SelectedListBoxItem == null) 
-            return;
-        Debug.WriteLine("selected changed");
+        Debug.WriteLine("reposition editing window");
         try
         {
             GetCurrentDpi(out var dpiX, out var dpiY);
@@ -317,26 +320,46 @@ public partial class MainWindow : Window
             var editWidth = homeworkEditWindow.ActualWidth * dpiX;
             var editHeight = homeworkEditWindow.ActualHeight * dpiY;
 
-            // 获取选中项的右边缘和左边缘屏幕坐标
-            var rightPoint = ViewModel.SelectedListBoxItem.PointToScreen(new Point(ViewModel.SelectedListBoxItem.ActualWidth, 0));
-            var leftPoint = ViewModel.SelectedListBoxItem.PointToScreen(new Point(0, 0));
-
             double editLeftScreen;
-            if (rightPoint.X + editWidth <= screen.Right)
+            double editTopScreen;
+
+            if (ViewModel.SelectedListBoxItem != null)
             {
-                // 右边空间足够，放在右边
-                editLeftScreen = rightPoint.X;
+                // 有选中项，基于选中项定位
+                var rightPoint = ViewModel.SelectedListBoxItem.PointToScreen(new Point(ViewModel.SelectedListBoxItem.ActualWidth, 0));
+                var leftPoint = ViewModel.SelectedListBoxItem.PointToScreen(new Point(0, 0));
+
+                if (rightPoint.X + editWidth <= screen.Right)
+                {
+                    editLeftScreen = rightPoint.X;
+                }
+                else
+                {
+                    editLeftScreen = leftPoint.X - editWidth;
+                }
+                editTopScreen = rightPoint.Y;
             }
             else
             {
-                // 右边空间不足，放在左边
-                editLeftScreen = leftPoint.X - editWidth;
+                // 无选中项（如新建作业），基于主窗口定位
+                var mainRight = PointToScreen(new Point(ActualWidth, 0)).X;
+                var mainLeft = PointToScreen(new Point(0, 0)).X;
+
+                if (mainRight + editWidth <= screen.Right)
+                {
+                    editLeftScreen = mainRight;
+                }
+                else
+                {
+                    editLeftScreen = mainLeft - editWidth;
+                }
+                editTopScreen = PointToScreen(new Point(0, 0)).Y;
             }
 
             homeworkEditWindow.Left = Math.Max(0, editLeftScreen) / dpiX;
-            homeworkEditWindow.Top = Math.Min(rightPoint.Y, screen.Bottom - editHeight) / dpiY;
+            homeworkEditWindow.Top = Math.Min(editTopScreen, screen.Bottom - editHeight) / dpiY;
         }
-        catch (Exception e)
+        catch (Exception)
         {
             // ignored
         }
