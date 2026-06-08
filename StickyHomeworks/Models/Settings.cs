@@ -32,7 +32,7 @@ public class Settings : ObservableRecipient
     private double _windowWidth = 400;
     private double _windowHeight = 800;
     private bool _isBottom = true;
-    private string _title = "我的软件";
+    private string _title = "作业";
     private double _maxPanelWidth = 350;
     private bool _isDebugShowInTaskBar = false;
     private ObservableCollection<Color> _savedColors = new();
