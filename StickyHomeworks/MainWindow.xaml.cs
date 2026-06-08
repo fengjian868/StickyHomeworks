@@ -59,7 +59,18 @@ public partial class MainWindow : Window
 
     private void HomeworksOnCollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
-        Dispatcher.Invoke(() => UpdateAddButtonVisibility());
+        Dispatcher.Invoke(() =>
+        {
+            UpdateAddButtonVisibility();
+            // 作业列表变化时自动滚动到底部
+            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
+            {
+                Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    MainScrollViewer.ScrollToEnd();
+                }), System.Windows.Threading.DispatcherPriority.Background);
+            }
+        });
     }
 
     private void UpdateAddButtonVisibility()

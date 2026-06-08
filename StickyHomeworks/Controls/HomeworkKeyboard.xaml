@@ -14,7 +14,7 @@
             <Setter Property="Margin" Value="1"/>
             <Setter Property="Padding" Value="2 3"/>
             <Setter Property="MinHeight" Value="34"/>
-            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontSize" Value="14"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}"/>
             <Setter Property="Background" Value="{DynamicResource MaterialDesignPaper}"/>
