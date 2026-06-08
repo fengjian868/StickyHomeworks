@@ -89,6 +89,7 @@ public partial class HomeworkEditWindow : Window, INotifyPropertyChanged
         get => _relatedRichTextBox;
         set
         {
+            if (value == _relatedRichTextBox) return;
             UnregisterOldTextBox(_relatedRichTextBox);
             RegisterNewTextBox(value);
             _relatedRichTextBox = value;
@@ -98,9 +99,10 @@ public partial class HomeworkEditWindow : Window, INotifyPropertyChanged
             {
                 _keyboardWindow.Keyboard.TargetRichTextBox = value;
             }
-            // 如果窗口已打开但键盘未显示，则显示键盘
+            // 如果窗口已打开，强制刷新键盘显示
             if (IsOpened && SettingsService.Settings.IsCustomKeyboardEnabled)
             {
+                _keyboardWindow?.Hide();
                 UpdateKeyboardVisibility();
             }
         }
