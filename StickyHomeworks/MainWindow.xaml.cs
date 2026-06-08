@@ -67,8 +67,8 @@ public partial class MainWindow : Window
             {
                 Dispatcher.BeginInvoke(new Action(() =>
                 {
-                    MainScrollViewer.ScrollToEnd();
-                }), System.Windows.Threading.DispatcherPriority.Background);
+                    MainScrollViewer.ScrollToBottom();
+                }), System.Windows.Threading.DispatcherPriority.Render);
             }
         });
     }

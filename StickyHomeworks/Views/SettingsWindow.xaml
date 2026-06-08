@@ -614,7 +614,11 @@
                                                 <ColumnDefinition />
                                                 <ColumnDefinition Width="Auto" />
                                             </Grid.ColumnDefinitions>
-                                            <TextBlock Text="{Binding}" VerticalAlignment="Center" />
+                                            <TextBox Text="{Binding Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                     VerticalAlignment="Center"
+                                                     BorderThickness="0"
+                                                     Background="Transparent"
+                                                     Padding="0"/>
                                             <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="4 0 0 0"
                                                         Visibility="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType=ListBoxItem}, Converter={StaticResource BooleanToVisibilityConverter}}">
                                                 <Button Content="{materialDesign:PackIcon DeleteOutline, Size=16}"

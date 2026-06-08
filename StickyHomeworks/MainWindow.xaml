@@ -258,6 +258,7 @@
                                   materialDesign:ScrollViewerAssist.IsAutoHideEnabled="True"
                                   x:Name="MainScrollViewer"
                                   PreviewMouseWheel="MainScrollViewer_OnPreviewMouseWheel"
+                                  CanContentScroll="False"
                                   Margin="0 0 0 40">
                         <ListView Focusable="False"
                                       IsTabStop="False"
