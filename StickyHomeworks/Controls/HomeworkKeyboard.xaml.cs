@@ -56,10 +56,10 @@ public partial class HomeworkKeyboard : UserControl
     private void InitializeDefaultButtons()
     {
         // 数字 (10个数字 + 删除键 = 11列)
-        AddButtons(NumberPanel, new[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "\u232B" }, "number");
+        AddButtons(NumberPanel, new[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "删除" }, "number");
 
         // 中文数字 (10个 + 换行 = 11列)
-        AddButtons(ChineseNumberPanel, new[] { "一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "\u23CE" }, "chineseNumber");
+        AddButtons(ChineseNumberPanel, new[] { "一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "换行" }, "chineseNumber");
 
         // 书本
         AddButtons(BookPanel, new[] { "必修", "选修", "大本", "小本", "作业本", "书本", "错题本", "作文本", "周记本" }, "book");
@@ -93,12 +93,12 @@ public partial class HomeworkKeyboard : UserControl
             };
 
             // 特殊处理功能键
-            if (text == "\u232B") // 删除
+            if (text == "删除")
             {
                 button.Style = (Style)FindResource("Win11ActionKeyStyle");
                 button.Click += ButtonBackspace_OnClick;
             }
-            else if (text == "\u23CE") // 换行
+            else if (text == "换行")
             {
                 button.Style = (Style)FindResource("Win11ActionKeyStyle");
                 button.Click += ButtonEnter_OnClick;

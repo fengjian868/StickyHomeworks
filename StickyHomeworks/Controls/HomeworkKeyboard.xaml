@@ -210,11 +210,11 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="操作" Style="{StaticResource CategoryLabelStyle}"/>
                 <UniformGrid Grid.Column="1" Columns="3">
-                    <Button Content="&#x232B;" Style="{StaticResource Win11ActionKeyStyle}"
+                    <Button Content="删除" Style="{StaticResource Win11ActionKeyStyle}"
                             ToolTip="删除" Click="ButtonBackspace_OnClick"/>
-                    <Button Content="&#x23CE;" Style="{StaticResource Win11ActionKeyStyle}"
+                    <Button Content="换行" Style="{StaticResource Win11ActionKeyStyle}"
                             ToolTip="换行" Click="ButtonEnter_OnClick"/>
-                    <Button Content="&#x2715;" Style="{StaticResource Win11ActionKeyStyle}"
+                    <Button Content="关闭" Style="{StaticResource Win11ActionKeyStyle}"
                             ToolTip="关闭" Click="ButtonClose_OnClick"/>
                 </UniformGrid>
             </Grid>
