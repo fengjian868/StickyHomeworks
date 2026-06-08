@@ -657,11 +657,11 @@
                                         <!-- about -->
                                         <StackPanel Grid.Column="1" Margin="10 0 0 0">
                                             <TextBlock>
-                                                    <Run Text="StickyHomework" FontSize="24" FontWeight="Bold" />
+                                                    <Run Text="我的软件" FontSize="24" FontWeight="Bold" />
                                                     <LineBreak />
                                                     <Run Text="{x:Static ci:App.AppVersion}" />
                                                     <LineBreak />
-                                                    <Run Text="Copyright (c) 2023 HelloWRC" />
+                                                    <Run Text="Copyright (c) 2024" />
                                             </TextBlock>
                                             <WrapPanel>
                                                 <Button HorizontalAlignment="Left" Margin="6"
@@ -693,17 +693,10 @@
                                                           ContextMenu="{x:Null}">
                                     <FlowDocument FontFamily="{StaticResource HarmonyOsSans}">
                                         <Paragraph Style="{StaticResource MarkdownHeadline1Style}">
-                                            关于本应用
+                                            关于本软件
                                         </Paragraph>
                                         <Paragraph>
-                                            注意！本应用处于早期开发阶段！大部分功能尚不完善，或存在bug，可能会在后期的版本中完善或修复。饼要一个一个画，功能要一个一个实现（
-                                        </Paragraph>
-                                        <Paragraph>
-                                            别看了，没做完。
-                                        </Paragraph>
-                                        <Paragraph Style="{StaticResource MarkdownHeadline2Style}"
-                                                   LineHeight="2">
-                                            鸣谢：
+                                            欢迎使用我的软件！这是一个用于管理作业的应用程序。
                                         </Paragraph>
                                         <Paragraph>
                                             <Button HorizontalAlignment="Left" Margin="6"
