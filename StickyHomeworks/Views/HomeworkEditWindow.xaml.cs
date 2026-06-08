@@ -42,12 +42,22 @@ public partial class HomeworkEditWindow : Window, INotifyPropertyChanged
         ShowKeyboard();
     }
 
-    private void ShowKeyboard()
+    private async void ShowKeyboard()
     {
         if (!SettingsService.Settings.IsCustomKeyboardEnabled)
         {
             _keyboardWindow?.Hide();
             return;
+        }
+
+        // 等待 RelatedRichTextBox 被设置（HomeworkControl 的绑定更新可能有延迟）
+        for (int i = 0; i < 30; i++)
+        {
+            // 检查 RelatedRichTextBox 是否已经被设置为实际的 RichTextBox（有 ActualWidth 说明已渲染）
+            if (RelatedRichTextBox != null && RelatedRichTextBox.ActualWidth > 0)
+                break;
+            await System.Windows.Threading.Dispatcher.Yield();
+            await Task.Delay(50);
         }
 
         _keyboardWindow ??= new KeyboardWindow();

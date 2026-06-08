@@ -228,12 +228,39 @@ public partial class MainWindow : Window
         await System.Windows.Threading.Dispatcher.Yield();
         await Task.Delay(100);
 
+        // 滚动到新建的作业项
+        MainListView.ScrollIntoView(o);
+        await System.Windows.Threading.Dispatcher.Yield();
+        await Task.Delay(50);
+
+        // 找到对应的 HomeworkControl 并强制进入编辑模式
+        var container = MainListView.ItemContainerGenerator.ContainerFromItem(o) as ListBoxItem;
+        if (container != null)
+        {
+            var homeworkControl = FindVisualChild<Controls.HomeworkControl>(container);
+            homeworkControl?.ForceEnterEdit();
+        }
+
         var editWindow = AppEx.GetService<HomeworkEditWindow>();
         editWindow.TryOpen();
 
         // 窗口显示后再次定位（此时 ActualWidth 已有值）
         await System.Windows.Threading.Dispatcher.Yield();
         RepositionEditingWindow();
+    }
+
+    private T? FindVisualChild<T>(DependencyObject parent) where T : DependencyObject
+    {
+        for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+        {
+            var child = VisualTreeHelper.GetChild(parent, i);
+            if (child is T typedChild)
+                return typedChild;
+            var result = FindVisualChild<T>(child);
+            if (result != null)
+                return result;
+        }
+        return null;
     }
 
     private void ButtonAddHomeworkCompleted_OnClick(object sender, RoutedEventArgs e)

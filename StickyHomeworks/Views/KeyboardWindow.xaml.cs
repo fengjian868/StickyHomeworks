@@ -11,20 +11,45 @@ public partial class KeyboardWindow : Window
     public HomeworkKeyboard Keyboard => KeyboardControl;
     private bool _isDragging;
     private Point _dragStartPoint;
+    private bool _isLoaded;
 
     public KeyboardWindow()
     {
         InitializeComponent();
         KeyboardControl.CloseRequested += (s, e) => Hide();
         KeyboardControl.DoneRequested += (s, e) => Hide();
+        KeyboardControl.DragHandlePressed += (s, e) =>
+        {
+            if (e is MouseButtonEventArgs mbe)
+            {
+                _isDragging = true;
+                _dragStartPoint = mbe.GetPosition(this);
+                CaptureMouse();
+            }
+        };
         Loaded += OnLoaded;
     }
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
-        // 窗口加载后定位到底部并播放弹入动画
+        _isLoaded = true;
         PositionAtBottom();
+        PlaySlideUpAnimation();
+    }
+
+    private void PlaySlideUpAnimation()
+    {
+        var screen = Screen.PrimaryScreen!.WorkingArea;
+        var source = PresentationSource.FromVisual(this);
+        var dpiY = source?.CompositionTarget?.TransformToDevice.M22 ?? 1.0;
+        var height = ActualHeight > 0 ? ActualHeight : 400;
+        var targetTop = Math.Clamp(screen.Bottom / dpiY - height, screen.Top / dpiY, screen.Bottom / dpiY - height);
+
+        // 设置动画的起始值和终止值
         var storyboard = (Storyboard)FindResource("SlideUpStoryboard");
+        var animation = (DoubleAnimation)storyboard.Children[0];
+        animation.From = Top;
+        animation.To = targetTop;
         storyboard.Begin(this);
     }
 
@@ -37,21 +62,28 @@ public partial class KeyboardWindow : Window
             return;
         }
 
-        // 设置窗口宽度
         var screen = Screen.PrimaryScreen!.WorkingArea;
         var source = PresentationSource.FromVisual(this);
         var dpiX = source?.CompositionTarget?.TransformToDevice.M11 ?? 1.0;
         var screenWidth = screen.Width / dpiX;
-        Width = Math.Clamp(screenWidth * 0.9, 480, 900);
 
-        // 先定位到底部（在屏幕外），然后 Show，再由动画弹入
-        var dpiY = source?.CompositionTarget?.TransformToDevice.M22 ?? 1.0;
-        var estimatedHeight = 380; // 预估高度
+        // 键盘宽度占屏幕 95%，最小 600，最大 1200
+        Width = Math.Clamp(screenWidth * 0.95, 600, 1200);
+
+        // 水平居中
         Left = Math.Clamp((screenWidth - Width) / 2, screen.Left / dpiX, (screen.Right / dpiX) - Width);
-        Top = screen.Bottom / dpiY; // 初始在屏幕底部外，动画会把它弹上来
+        // 初始位置在屏幕底部（动画开始位置）
+        Top = screen.Bottom / (source?.CompositionTarget?.TransformToDevice.M22 ?? 1.0);
 
         Show();
         Activate();
+
+        // 如果已经加载过（非首次显示），手动定位和播放动画
+        if (_isLoaded)
+        {
+            PositionAtBottom();
+            PlaySlideUpAnimation();
+        }
     }
 
     public void PositionAtBottom()
@@ -62,9 +94,9 @@ public partial class KeyboardWindow : Window
         var dpiY = source?.CompositionTarget?.TransformToDevice.M22 ?? 1.0;
 
         var screenWidth = screen.Width / dpiX;
-        Width = Math.Clamp(screenWidth * 0.9, 480, 900);
+        Width = Math.Clamp(screenWidth * 0.95, 600, 1200);
 
-        var height = ActualHeight > 0 ? ActualHeight : 380;
+        var height = ActualHeight > 0 ? ActualHeight : 400;
         Left = Math.Clamp((screenWidth - Width) / 2, screen.Left / dpiX, (screen.Right / dpiX) - Width);
         Top = Math.Clamp(screen.Bottom / dpiY - height, screen.Top / dpiY, screen.Bottom / dpiY - height);
     }
@@ -76,7 +108,7 @@ public partial class KeyboardWindow : Window
         var dpiX = source?.CompositionTarget?.TransformToDevice.M11 ?? 1.0;
         var dpiY = source?.CompositionTarget?.TransformToDevice.M22 ?? 1.0;
 
-        var height = ActualHeight > 0 ? ActualHeight : 380;
+        var height = ActualHeight > 0 ? ActualHeight : 400;
         Left = Math.Clamp(Left, screen.Left / dpiX, (screen.Right / dpiX) - Width);
         Top = Math.Clamp(Top, screen.Top / dpiY, (screen.Bottom / dpiY) - height);
     }

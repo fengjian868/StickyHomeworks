@@ -31,6 +31,7 @@ public partial class HomeworkKeyboard : UserControl
 
     public event EventHandler? CloseRequested;
     public event EventHandler? DoneRequested;
+    public event EventHandler? DragHandlePressed;
 
     public HomeworkKeyboard()
     {
@@ -190,6 +191,6 @@ public partial class HomeworkKeyboard : UserControl
 
     private void DragHandle_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
-        // 让父窗口处理拖拽
+        DragHandlePressed?.Invoke(this, e);
     }
 }

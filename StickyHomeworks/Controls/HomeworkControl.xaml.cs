@@ -71,7 +71,7 @@ public partial class HomeworkControl : UserControl
     private void IsEditingChanged(bool value)
     {
         Debug.WriteLine($"IsEditing changed! {value} {IsSelected}");
-        if (IsSelected && value)
+        if (value)
         {
             Debug.WriteLine("RelatedRichTextBox updated because IsEditing changed");
             EnterEdit();
@@ -94,6 +94,11 @@ public partial class HomeworkControl : UserControl
             Debug.WriteLine("RelatedRichTextBox updated because IsSelected changed");
             EnterEdit();
         }
+    }
+
+    public void ForceEnterEdit()
+    {
+        EnterEdit();
     }
 
     private void RichTextBox_OnKeyDown(object sender, KeyEventArgs e)

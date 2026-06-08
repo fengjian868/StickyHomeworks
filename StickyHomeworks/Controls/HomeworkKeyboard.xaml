@@ -6,14 +6,14 @@
              xmlns:local="clr-namespace:StickyHomeworks.Controls"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
-             d:DesignHeight="380" d:DesignWidth="600">
+             HorizontalAlignment="Stretch"
+             d:DesignHeight="400" d:DesignWidth="800">
     <UserControl.Resources>
         <!-- Win11 风格按键 -->
         <Style x:Key="Win11KeyStyle" TargetType="Button">
-            <Setter Property="Margin" Value="2"/>
-            <Setter Property="Padding" Value="2 4"/>
-            <Setter Property="MinWidth" Value="28"/>
-            <Setter Property="MinHeight" Value="32"/>
+            <Setter Property="Margin" Value="1"/>
+            <Setter Property="Padding" Value="2 3"/>
+            <Setter Property="MinHeight" Value="34"/>
             <Setter Property="FontSize" Value="12"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}"/>
@@ -21,6 +21,10 @@
             <Setter Property="BorderBrush" Value="{DynamicResource MaterialDesignDivider}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -29,8 +33,8 @@
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 CornerRadius="4"
                                 SnapsToDevicePixels="True">
-                            <ContentPresenter HorizontalAlignment="Center"
-                                              VerticalAlignment="Center"
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                               Margin="{TemplateBinding Padding}"/>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -54,8 +58,7 @@
         <Style x:Key="Win11DoneKeyStyle" TargetType="Button" BasedOn="{StaticResource Win11KeyStyle}">
             <Setter Property="Background" Value="{DynamicResource PrimaryHueMidBrush}"/>
             <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidForegroundBrush}"/>
-            <Setter Property="MinWidth" Value="120"/>
-            <Setter Property="MinHeight" Value="36"/>
+            <Setter Property="MinHeight" Value="38"/>
             <Setter Property="FontSize" Value="14"/>
         </Style>
         <!-- 分类标签 -->
@@ -73,7 +76,6 @@
             BorderBrush="{DynamicResource MaterialDesignDivider}"
             BorderThickness="1"
             CornerRadius="8"
-            Margin="4"
             Effect="{DynamicResource MaterialDesignShadowDepth2}">
         <Grid>
             <Grid.RowDefinitions>
@@ -207,14 +209,14 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="操作" Style="{StaticResource CategoryLabelStyle}"/>
-                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                <UniformGrid Grid.Column="1" Columns="3">
                     <Button Content="&#x232B;" Style="{StaticResource Win11ActionKeyStyle}"
                             ToolTip="删除" Click="ButtonBackspace_OnClick"/>
                     <Button Content="&#x23CE;" Style="{StaticResource Win11ActionKeyStyle}"
                             ToolTip="换行" Click="ButtonEnter_OnClick"/>
                     <Button Content="&#x2715;" Style="{StaticResource Win11ActionKeyStyle}"
                             ToolTip="关闭" Click="ButtonClose_OnClick"/>
-                </StackPanel>
+                </UniformGrid>
             </Grid>
 
             <!-- 完成按钮行 -->
