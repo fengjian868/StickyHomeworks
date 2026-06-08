@@ -67,7 +67,7 @@ public partial class MainWindow : Window
             {
                 Dispatcher.BeginInvoke(new Action(() =>
                 {
-                    MainScrollViewer.ScrollToBottom();
+                    MainScrollViewer.ScrollToVerticalOffset(MainScrollViewer.ScrollableHeight);
                 }), System.Windows.Threading.DispatcherPriority.Render);
             }
         });
