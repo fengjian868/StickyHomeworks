@@ -220,17 +220,20 @@ public partial class MainWindow : Window
         ViewModel.EditingHomework = o;
         ViewModel.SelectedHomework = o;
         ProfileService.Profile.Homeworks.Add(o);
-        //ComboBoxSubject.Text = lastSubject;
         SettingsService.SaveSettings();
         ProfileService.SaveProfile();
         ViewModel.IsUpdatingHomeworkSubject = false;
 
         // 等待 UI 渲染完成，确保 HomeworkControl 已创建
         await System.Windows.Threading.Dispatcher.Yield();
-        await Task.Delay(50);
+        await Task.Delay(100);
 
+        var editWindow = AppEx.GetService<HomeworkEditWindow>();
+        editWindow.TryOpen();
+
+        // 窗口显示后再次定位（此时 ActualWidth 已有值）
+        await System.Windows.Threading.Dispatcher.Yield();
         RepositionEditingWindow();
-        AppEx.GetService<HomeworkEditWindow>().TryOpen();
     }
 
     private void ButtonAddHomeworkCompleted_OnClick(object sender, RoutedEventArgs e)
@@ -297,7 +300,7 @@ public partial class MainWindow : Window
         ViewModel.IsTagEditingPopupOpened = true;
     }
 
-    private void ButtonEditHomework_OnClick(object sender, RoutedEventArgs e)
+    private async void ButtonEditHomework_OnClick(object sender, RoutedEventArgs e)
     {
         OnHomeworkEditorUpdated?.Invoke(this, EventArgs.Empty);
         ViewModel.IsCreatingMode = false;
@@ -305,8 +308,11 @@ public partial class MainWindow : Window
             return;
         ViewModel.EditingHomework = ViewModel.SelectedHomework;
         ViewModel.IsDrawerOpened = true;
+        var editWindow = AppEx.GetService<HomeworkEditWindow>();
+        editWindow.TryOpen();
+        // 窗口显示后定位
+        await System.Windows.Threading.Dispatcher.Yield();
         RepositionEditingWindow();
-        AppEx.GetService<HomeworkEditWindow>().TryOpen();
     }
 
     private void RepositionEditingWindow()

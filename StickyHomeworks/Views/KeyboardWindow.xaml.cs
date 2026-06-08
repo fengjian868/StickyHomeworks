@@ -1,5 +1,4 @@
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
@@ -20,16 +19,39 @@ public partial class KeyboardWindow : Window
         KeyboardControl.MouseLeftButtonDown += OnMouseLeftButtonDown;
         KeyboardControl.MouseMove += OnMouseMove;
         KeyboardControl.MouseLeftButtonUp += OnMouseLeftButtonUp;
+        Loaded += OnLoaded;
+    }
+
+    private void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        // 窗口加载后定位到底部并播放弹入动画
+        PositionAtBottom();
+        var storyboard = (Storyboard)FindResource("SlideUpStoryboard");
+        storyboard.Begin(this);
     }
 
     public void ShowKeyboard()
     {
-        if (IsVisible) return;
-        PositionAtBottom();
+        if (IsVisible)
+        {
+            // 已可见时只更新位置
+            PositionAtBottom();
+            return;
+        }
+
+        // 先设置宽度，让 SizeToContent 计算高度
+        var screen = Screen.PrimaryScreen!.WorkingArea;
+        var source = PresentationSource.FromVisual(this);
+        var dpiX = source?.CompositionTarget?.TransformToDevice.M11 ?? 1.0;
+        var screenWidth = screen.Width / dpiX;
+        Width = Math.Clamp(screenWidth * 0.85, 400, 800);
+        Left = (screenWidth - Width) / 2;
+        // 不设置 Top，让 Loaded 事件定位
+
         Show();
-        var storyboard = (Storyboard)FindResource("SlideUpStoryboard");
-        storyboard.Begin(this);
     }
+
+    private double _dpiY => PresentationSource.FromVisual(this)?.CompositionTarget?.TransformToDevice.M22 ?? 1.0;
 
     public void PositionAtBottom()
     {
@@ -39,12 +61,11 @@ public partial class KeyboardWindow : Window
         var dpiY = source?.CompositionTarget?.TransformToDevice.M22 ?? 1.0;
 
         var screenWidth = screen.Width / dpiX;
-        var screenHeight = screen.Height / dpiY;
         Width = Math.Clamp(screenWidth * 0.85, 400, 800);
 
-        // 确保键盘在屏幕内
+        var height = ActualHeight > 0 ? ActualHeight : 320;
         Left = Math.Clamp((screenWidth - Width) / 2, screen.Left / dpiX, (screen.Right / dpiX) - Width);
-        Top = Math.Clamp(screen.Bottom / dpiY - ActualHeight, screen.Top / dpiY, screen.Bottom / dpiY - ActualHeight);
+        Top = Math.Clamp(screen.Bottom / dpiY - height, screen.Top / dpiY, screen.Bottom / dpiY - height);
     }
 
     public void EnsureInScreen()
@@ -54,13 +75,9 @@ public partial class KeyboardWindow : Window
         var dpiX = source?.CompositionTarget?.TransformToDevice.M11 ?? 1.0;
         var dpiY = source?.CompositionTarget?.TransformToDevice.M22 ?? 1.0;
 
-        var screenLeft = screen.Left / dpiX;
-        var screenRight = screen.Right / dpiX;
-        var screenTop = screen.Top / dpiY;
-        var screenBottom = screen.Bottom / dpiY;
-
-        Left = Math.Clamp(Left, screenLeft, screenRight - Width);
-        Top = Math.Clamp(Top, screenTop, screenBottom - ActualHeight);
+        var height = ActualHeight > 0 ? ActualHeight : 320;
+        Left = Math.Clamp(Left, screen.Left / dpiX, (screen.Right / dpiX) - Width);
+        Top = Math.Clamp(Top, screen.Top / dpiY, (screen.Bottom / dpiY) - height);
     }
 
     private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

@@ -24,6 +24,7 @@
         ResizeMode="NoResize"
         SizeToContent="Height"
         AllowsTransparency="True"
+        WindowStartupLocation="Manual"
         Icon="/Assets/AppLogo.png"
         Title="编辑作业" Height="450" Width="300"
         Opacity="0.95">
