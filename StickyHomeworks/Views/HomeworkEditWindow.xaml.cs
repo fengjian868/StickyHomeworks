@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using ElysiaFramework;
 using StickyHomeworks.Models;
 using StickyHomeworks.Services;
@@ -22,9 +16,6 @@ using StickyHomeworks.ViewModels;
 
 namespace StickyHomeworks.Views;
 
-/// <summary>
-/// HomeworkEditWindow.xaml 的交互逻辑
-/// </summary>
 public partial class HomeworkEditWindow : Window, INotifyPropertyChanged
 {
     private RichTextBox _relatedRichTextBox = new();
@@ -48,31 +39,26 @@ public partial class HomeworkEditWindow : Window, INotifyPropertyChanged
         Show();
         Activate();
         IsOpened = true;
-        UpdateKeyboardVisibility();
+        ShowKeyboard();
     }
 
-    private void UpdateKeyboardVisibility()
+    private void ShowKeyboard()
     {
-        if (SettingsService.Settings.IsCustomKeyboardEnabled && RelatedRichTextBox != null)
-        {
-            _keyboardWindow ??= new KeyboardWindow();
-            _keyboardWindow.Keyboard.TargetRichTextBox = RelatedRichTextBox;
-            // 转换自定义按钮字符串为 KeyboardButton 对象
-            var buttons = new ObservableCollection<Models.KeyboardButton>();
-            foreach (var btn in SettingsService.Settings.CustomKeyboardButtons)
-            {
-                buttons.Add(new Models.KeyboardButton(btn, "custom"));
-            }
-            _keyboardWindow.Keyboard.CustomButtons = buttons;
-            if (!_keyboardWindow.IsVisible)
-            {
-                _keyboardWindow.ShowKeyboard();
-            }
-        }
-        else
+        if (!SettingsService.Settings.IsCustomKeyboardEnabled)
         {
             _keyboardWindow?.Hide();
+            return;
         }
+
+        _keyboardWindow ??= new KeyboardWindow();
+        _keyboardWindow.Keyboard.TargetRichTextBox = RelatedRichTextBox;
+        var buttons = new ObservableCollection<Models.KeyboardButton>();
+        foreach (var btn in SettingsService.Settings.CustomKeyboardButtons)
+        {
+            buttons.Add(new Models.KeyboardButton(btn, "custom"));
+        }
+        _keyboardWindow.Keyboard.CustomButtons = buttons;
+        _keyboardWindow.ShowKeyboard();
     }
 
     public void TryClose()
@@ -95,15 +81,9 @@ public partial class HomeworkEditWindow : Window, INotifyPropertyChanged
             _relatedRichTextBox = value;
             OnPropertyChanged();
             // 更新键盘的目标输入框
-            if (_keyboardWindow != null && SettingsService.Settings.IsCustomKeyboardEnabled)
+            if (_keyboardWindow != null)
             {
                 _keyboardWindow.Keyboard.TargetRichTextBox = value;
-            }
-            // 如果窗口已打开，强制刷新键盘显示
-            if (IsOpened && SettingsService.Settings.IsCustomKeyboardEnabled)
-            {
-                _keyboardWindow?.Hide();
-                UpdateKeyboardVisibility();
             }
         }
     }
@@ -165,7 +145,6 @@ public partial class HomeworkEditWindow : Window, INotifyPropertyChanged
         Debug.WriteLine("selection changed!");
         if (RelatedRichTextBox.Selection.Start.Paragraph != null)
             ViewModel.SelectedParagraph = RelatedRichTextBox.Selection.Start.Paragraph;
-        // Update selection
         var s = RelatedRichTextBox.Selection;
         if (!MainWindow.IsActive)
         {

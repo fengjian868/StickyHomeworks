@@ -40,7 +40,7 @@ public partial class KeyboardWindow : Window
 
         var screenWidth = screen.Width / dpiX;
         var screenHeight = screen.Height / dpiY;
-        Width = Math.Clamp(screenWidth * 0.7, 350, 650);
+        Width = Math.Clamp(screenWidth * 0.85, 400, 800);
 
         // 确保键盘在屏幕内
         Left = Math.Clamp((screenWidth - Width) / 2, screen.Left / dpiX, (screen.Right / dpiX) - Width);

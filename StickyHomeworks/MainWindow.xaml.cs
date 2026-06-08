@@ -317,8 +317,9 @@ public partial class MainWindow : Window
             GetCurrentDpi(out var dpiX, out var dpiY);
             var screen = Screen.PrimaryScreen!.WorkingArea;
             var homeworkEditWindow = AppEx.GetService<HomeworkEditWindow>();
-            var editWidth = homeworkEditWindow.ActualWidth * dpiX;
-            var editHeight = homeworkEditWindow.ActualHeight * dpiY;
+            // 使用 Width 而非 ActualWidth，因为窗口可能尚未渲染
+            var editWidth = (homeworkEditWindow.ActualWidth > 0 ? homeworkEditWindow.ActualWidth : homeworkEditWindow.Width) * dpiX;
+            var editHeight = (homeworkEditWindow.ActualHeight > 0 ? homeworkEditWindow.ActualHeight : 450) * dpiY;
 
             double editLeftScreen;
             double editTopScreen;

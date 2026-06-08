@@ -66,7 +66,6 @@
             BorderThickness="1"
             CornerRadius="8"
             Margin="4"
-            Opacity="0.95"
             Effect="{DynamicResource MaterialDesignShadowDepth2}">
         <Grid>
             <Grid.RowDefinitions>

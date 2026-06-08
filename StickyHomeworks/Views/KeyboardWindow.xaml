@@ -11,7 +11,7 @@
         Background="{x:Null}"
         SizeToContent="Height"
         Title="键盘"
-        Opacity="0.9">
+        Opacity="0.8">
     <Window.Resources>
         <Storyboard x:Key="SlideUpStoryboard">
             <DoubleAnimation Storyboard.TargetProperty="(Window.Top)"
