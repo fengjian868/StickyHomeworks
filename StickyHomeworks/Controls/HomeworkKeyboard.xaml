@@ -6,155 +6,207 @@
              xmlns:local="clr-namespace:StickyHomeworks.Controls"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
-             d:DesignHeight="260" d:DesignWidth="520">
+             d:DesignHeight="320" d:DesignWidth="560">
     <UserControl.Resources>
-        <Style x:Key="KeyboardButtonStyle" TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatButton}">
-            <Setter Property="Margin" Value="1"/>
-            <Setter Property="Padding" Value="2 1"/>
-            <Setter Property="MinWidth" Value="24"/>
-            <Setter Property="MinHeight" Value="20"/>
-            <Setter Property="FontSize" Value="10"/>
+        <!-- Win11 风格按键 -->
+        <Style x:Key="Win11KeyStyle" TargetType="Button">
+            <Setter Property="Margin" Value="2"/>
+            <Setter Property="Padding" Value="4 6"/>
+            <Setter Property="MinWidth" Value="32"/>
+            <Setter Property="MinHeight" Value="36"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}"/>
+            <Setter Property="Background" Value="{DynamicResource MaterialDesignPaper}"/>
             <Setter Property="BorderBrush" Value="{DynamicResource MaterialDesignDivider}"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Background" Value="{DynamicResource MaterialDesignPaper}"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4"
+                                SnapsToDevicePixels="True">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource MaterialDesignToolBarBackground}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource MaterialDesignSelection}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
-        <Style x:Key="KeyboardActionButtonStyle" TargetType="Button" BasedOn="{StaticResource KeyboardButtonStyle}">
-            <Setter Property="Background" Value="{DynamicResource PrimaryHueMidBrush}"/>
-            <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidForegroundBrush}"/>
+        <!-- 功能键样式 -->
+        <Style x:Key="Win11ActionKeyStyle" TargetType="Button" BasedOn="{StaticResource Win11KeyStyle}">
+            <Setter Property="Background" Value="{DynamicResource MaterialDesignToolBarBackground}"/>
+            <Setter Property="MinWidth" Value="48"/>
         </Style>
-        <Style x:Key="CategoryHeaderStyle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="9"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Margin" Value="2 1"/>
+        <!-- 分类标签 -->
+        <Style x:Key="CategoryLabelStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="4 2"/>
             <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBodyLight}"/>
-            <Setter Property="Width" Value="28"/>
+            <Setter Property="Width" Value="36"/>
             <Setter Property="TextAlignment" Value="Center"/>
         </Style>
     </UserControl.Resources>
-    <materialDesign:Card Background="{DynamicResource MaterialDesignPaper}"
-                         Margin="2"
-                         materialDesign:ElevationAssist.Elevation="Dp4"
-                         Opacity="0.92">
+
+    <Border Background="{DynamicResource MaterialDesignPaper}"
+            BorderBrush="{DynamicResource MaterialDesignDivider}"
+            BorderThickness="1"
+            CornerRadius="8"
+            Margin="4"
+            Opacity="0.95"
+            Effect="{DynamicResource MaterialDesignShadowDepth2}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
+                <!-- 拖动手柄 -->
                 <RowDefinition Height="Auto"/>
+                <!-- 数字 -->
                 <RowDefinition Height="Auto"/>
+                <!-- 中文数字 -->
                 <RowDefinition Height="Auto"/>
+                <!-- 书本 -->
                 <RowDefinition Height="Auto"/>
+                <!-- 时间1 -->
                 <RowDefinition Height="Auto"/>
+                <!-- 时间2 -->
                 <RowDefinition Height="Auto"/>
+                <!-- 内容 -->
                 <RowDefinition Height="Auto"/>
+                <!-- 符号 -->
                 <RowDefinition Height="Auto"/>
+                <!-- 字母 -->
                 <RowDefinition Height="Auto"/>
+                <!-- 其他 -->
+                <RowDefinition Height="Auto"/>
+                <!-- 操作 -->
             </Grid.RowDefinitions>
 
+            <!-- 拖动手柄 -->
+            <Grid Grid.Row="0" Height="20" Cursor="SizeAll">
+                <Border Width="40" Height="4" CornerRadius="2"
+                        Background="{DynamicResource MaterialDesignBodyLight}"
+                        VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            </Grid>
+
             <!-- 数字行 -->
-            <Grid Grid.Row="0" Margin="1">
+            <Grid Grid.Row="1" Margin="4 2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="数字" Style="{StaticResource CategoryHeaderStyle}"/>
+                <TextBlock Grid.Column="0" Text="数字" Style="{StaticResource CategoryLabelStyle}"/>
                 <UniformGrid Grid.Column="1" x:Name="NumberPanel" Columns="10"/>
             </Grid>
 
             <!-- 中文数字行 -->
-            <Grid Grid.Row="1" Margin="1">
+            <Grid Grid.Row="2" Margin="4 2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="数字" Style="{StaticResource CategoryHeaderStyle}"/>
+                <TextBlock Grid.Column="0" Text="数字" Style="{StaticResource CategoryLabelStyle}"/>
                 <UniformGrid Grid.Column="1" x:Name="ChineseNumberPanel" Columns="10"/>
             </Grid>
 
             <!-- 书本行 -->
-            <Grid Grid.Row="2" Margin="1">
+            <Grid Grid.Row="3" Margin="4 2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="书本" Style="{StaticResource CategoryHeaderStyle}"/>
+                <TextBlock Grid.Column="0" Text="书本" Style="{StaticResource CategoryLabelStyle}"/>
                 <UniformGrid Grid.Column="1" x:Name="BookPanel" Columns="9"/>
             </Grid>
 
             <!-- 时间行1 -->
-            <Grid Grid.Row="3" Margin="1">
+            <Grid Grid.Row="4" Margin="4 2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="时间" Style="{StaticResource CategoryHeaderStyle}"/>
+                <TextBlock Grid.Column="0" Text="时间" Style="{StaticResource CategoryLabelStyle}"/>
                 <UniformGrid Grid.Column="1" x:Name="TimePanel1" Columns="10"/>
             </Grid>
 
             <!-- 时间行2 -->
-            <Grid Grid.Row="4" Margin="1">
+            <Grid Grid.Row="5" Margin="4 2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="时间" Style="{StaticResource CategoryHeaderStyle}"/>
+                <TextBlock Grid.Column="0" Text="时间" Style="{StaticResource CategoryLabelStyle}"/>
                 <UniformGrid Grid.Column="1" x:Name="TimePanel2" Columns="10"/>
             </Grid>
 
             <!-- 内容行 -->
-            <Grid Grid.Row="5" Margin="1">
+            <Grid Grid.Row="6" Margin="4 2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="内容" Style="{StaticResource CategoryHeaderStyle}"/>
+                <TextBlock Grid.Column="0" Text="内容" Style="{StaticResource CategoryLabelStyle}"/>
                 <UniformGrid Grid.Column="1" x:Name="ContentPanel" Columns="10"/>
             </Grid>
 
             <!-- 符号行 -->
-            <Grid Grid.Row="6" Margin="1">
+            <Grid Grid.Row="7" Margin="4 2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="符号" Style="{StaticResource CategoryHeaderStyle}"/>
+                <TextBlock Grid.Column="0" Text="符号" Style="{StaticResource CategoryLabelStyle}"/>
                 <UniformGrid Grid.Column="1" x:Name="SymbolPanel" Columns="10"/>
             </Grid>
 
             <!-- 常用字母行 -->
-            <Grid Grid.Row="7" Margin="1">
+            <Grid Grid.Row="8" Margin="4 2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="字母" Style="{StaticResource CategoryHeaderStyle}"/>
+                <TextBlock Grid.Column="0" Text="字母" Style="{StaticResource CategoryLabelStyle}"/>
                 <UniformGrid Grid.Column="1" x:Name="LetterPanel" Columns="5"/>
             </Grid>
 
             <!-- 其他行 -->
-            <Grid Grid.Row="8" Margin="1">
+            <Grid Grid.Row="9" Margin="4 2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="其他" Style="{StaticResource CategoryHeaderStyle}"/>
+                <TextBlock Grid.Column="0" Text="其他" Style="{StaticResource CategoryLabelStyle}"/>
                 <UniformGrid Grid.Column="1" x:Name="CustomPanel" Columns="10"/>
             </Grid>
 
             <!-- 功能键行 -->
-            <Grid Grid.Row="9" Margin="1 2 1 1">
+            <Grid Grid.Row="10" Margin="4 6 4 4">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="操作" Style="{StaticResource CategoryHeaderStyle}"/>
+                <TextBlock Grid.Column="0" Text="操作" Style="{StaticResource CategoryLabelStyle}"/>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Content="← 删除" Style="{StaticResource KeyboardActionButtonStyle}"
-                            Click="ButtonBackspace_OnClick"/>
-                    <Button Content="↵ 换行" Style="{StaticResource KeyboardActionButtonStyle}"
-                            Click="ButtonEnter_OnClick"/>
-                    <Button Content="✕ 关闭" Style="{StaticResource KeyboardActionButtonStyle}"
-                            Click="ButtonClose_OnClick"/>
+                    <Button Content="&#x2190;" Style="{StaticResource Win11ActionKeyStyle}"
+                            ToolTip="删除" Click="ButtonBackspace_OnClick"/>
+                    <Button Content="&#x23CE;" Style="{StaticResource Win11ActionKeyStyle}"
+                            ToolTip="换行" Click="ButtonEnter_OnClick"/>
+                    <Button Content="&#x2715;" Style="{StaticResource Win11ActionKeyStyle}"
+                            ToolTip="关闭" Click="ButtonClose_OnClick"/>
                 </StackPanel>
             </Grid>
         </Grid>
-    </materialDesign:Card>
+    </Border>
 </UserControl>

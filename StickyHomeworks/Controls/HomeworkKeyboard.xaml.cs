@@ -86,7 +86,7 @@ public partial class HomeworkKeyboard : UserControl
             var button = new Button
             {
                 Content = text,
-                Style = (Style)FindResource("KeyboardButtonStyle"),
+                Style = (Style)FindResource("Win11KeyStyle"),
                 Tag = new KeyboardButton(text, category)
             };
             button.Click += ButtonInsert_OnClick;
@@ -102,7 +102,7 @@ public partial class HomeworkKeyboard : UserControl
             var btn = new Button
             {
                 Content = button.DisplayText,
-                Style = (Style)FindResource("KeyboardButtonStyle"),
+                Style = (Style)FindResource("Win11KeyStyle"),
                 Tag = button
             };
             btn.Click += ButtonInsert_OnClick;
