@@ -57,28 +57,26 @@ public partial class MainWindow : Window
         ProfileService.Profile.Homeworks.CollectionChanged += HomeworksOnCollectionChanged;
     }
 
-    private void HomeworksOnCollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    private async void HomeworksOnCollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
-        Dispatcher.Invoke(() =>
+        await Dispatcher.InvokeAsync(() =>
         {
             UpdateAddButtonVisibility();
-            // 作业列表变化时，如果内容超出显示范围则自动滚动到底部
-            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
-            {
-                // 多次延迟确保 UI 完全渲染后再检查和滚动
-                for (int i = 0; i < 5; i++)
-                {
-                    Dispatcher.BeginInvoke(new Action(() =>
-                    {
-                        // 检查是否有可滚动的内容（ScrollableHeight > 0 表示有超出部分）
-                        if (MainScrollViewer.ScrollableHeight > 0)
-                        {
-                            MainScrollViewer.ScrollToVerticalOffset(MainScrollViewer.ScrollableHeight);
-                        }
-                    }), System.Windows.Threading.DispatcherPriority.Background);
-                }
-            }
         });
+        // 作业列表变化时，如果内容超出显示范围则自动滚动到底部
+        if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
+        {
+            // 等待 UI 渲染完成
+            await Task.Delay(100);
+            await Dispatcher.InvokeAsync(() =>
+            {
+                // 检查是否有可滚动的内容（ScrollableHeight > 0 表示有超出部分）
+                if (MainScrollViewer.ScrollableHeight > 0)
+                {
+                    MainScrollViewer.ScrollToVerticalOffset(MainScrollViewer.ScrollableHeight);
+                }
+            });
+        }
     }
 
     private void UpdateAddButtonVisibility()
