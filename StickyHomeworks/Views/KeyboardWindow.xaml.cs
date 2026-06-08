@@ -90,7 +90,7 @@ public partial class KeyboardWindow : Window
         CaptureMouse();
     }
 
-    protected override void OnMouseMove(MouseEventArgs e)
+    protected override void OnMouseMove(System.Windows.Input.MouseEventArgs e)
     {
         base.OnMouseMove(e);
         if (!_isDragging) return;
