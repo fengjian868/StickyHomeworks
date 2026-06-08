@@ -151,6 +151,10 @@ public partial class HomeworkKeyboard : UserControl
     {
         if (TargetRichTextBox == null) return;
 
+        TargetRichTextBox.Focus();
+        // 确保光标在文档末尾
+        TargetRichTextBox.CaretPosition = TargetRichTextBox.Document.ContentEnd;
+
         var selection = TargetRichTextBox.Selection;
         if (!selection.IsEmpty)
         {
@@ -167,6 +171,8 @@ public partial class HomeworkKeyboard : UserControl
             }
         }
 
+        // 删除后光标保持在末尾
+        TargetRichTextBox.CaretPosition = TargetRichTextBox.Document.ContentEnd;
         TargetRichTextBox.Focus();
     }
 
@@ -174,8 +180,15 @@ public partial class HomeworkKeyboard : UserControl
     {
         if (TargetRichTextBox == null) return;
 
+        TargetRichTextBox.Focus();
+        // 确保光标在文档末尾
+        TargetRichTextBox.CaretPosition = TargetRichTextBox.Document.ContentEnd;
+
         var selection = TargetRichTextBox.Selection;
         selection.Text = "\r\n";
+
+        // 换行后光标保持在末尾
+        TargetRichTextBox.CaretPosition = TargetRichTextBox.Document.ContentEnd;
         TargetRichTextBox.Focus();
     }
 
