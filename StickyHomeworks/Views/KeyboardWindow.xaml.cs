@@ -67,8 +67,8 @@ public partial class KeyboardWindow : Window
         var dpiY = GetDpiY();
         var screenWidth = screen.Width / dpiX;
 
-        // 键盘宽度占屏幕 95%，最小 600，最大 1200
-        Width = Math.Clamp(screenWidth * 0.95, 600, 1200);
+        // 键盘宽度占屏幕 70%，最小 500，最大 900
+        Width = Math.Clamp(screenWidth * 0.70, 500, 900);
 
         // 水平居中
         Left = Math.Clamp((screenWidth - Width) / 2, screen.Left / dpiX, (screen.Right / dpiX) - Width);
@@ -93,7 +93,7 @@ public partial class KeyboardWindow : Window
         var dpiY = GetDpiY();
 
         var screenWidth = screen.Width / dpiX;
-        Width = Math.Clamp(screenWidth * 0.95, 600, 1200);
+        Width = Math.Clamp(screenWidth * 0.70, 500, 900);
 
         var height = ActualHeight > 0 ? ActualHeight : 400;
         Left = Math.Clamp((screenWidth - Width) / 2, screen.Left / dpiX, (screen.Right / dpiX) - Width);
@@ -109,6 +109,13 @@ public partial class KeyboardWindow : Window
         var height = ActualHeight > 0 ? ActualHeight : 400;
         Left = Math.Clamp(Left, screen.Left / dpiX, (screen.Right / dpiX) - Width);
         Top = Math.Clamp(Top, screen.Top / dpiY, (screen.Bottom / dpiY) - height);
+    }
+
+    public void EnsureInScreenHorizontal()
+    {
+        var screen = Screen.PrimaryScreen!.WorkingArea;
+        var dpiX = GetDpiX();
+        Left = Math.Clamp(Left, screen.Left / dpiX, (screen.Right / dpiX) - Width);
     }
 
     private double GetDpiX()
@@ -149,9 +156,9 @@ public partial class KeyboardWindow : Window
         base.OnMouseMove(e);
         if (!_isDragging) return;
         var current = e.GetPosition(this);
+        // 只允许左右移动
         Left += current.X - _dragStartPoint.X;
-        Top += current.Y - _dragStartPoint.Y;
-        EnsureInScreen();
+        EnsureInScreenHorizontal();
     }
 
     protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
